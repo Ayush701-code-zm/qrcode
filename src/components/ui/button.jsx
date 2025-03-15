@@ -1,101 +1,35 @@
-import * as React from "react";
-import { forwardRef } from "react";
-import { Loader2 } from "lucide-react";
-import { cva } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import React from "react";
+// This import assumes your build setup converts SVGs to URLs
+import rectangleIcon from "../../../public/icons/Rectangle 7143.svg";
+import Image from "next/image";
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-  {
-    variants: {
-      variant: {
-        primary: "bg-orange-500 text-white shadow-xs hover:bg-orange-600",
-        secondary: "bg-orange-400 text-white shadow-xs hover:bg-orange-500",
-        destructive: "bg-red-500 text-white shadow-xs hover:bg-red-600",
-        outline:
-          "border border-orange-500 text-orange-500 bg-background shadow-xs hover:bg-orange-100",
-        ghost: "hover:bg-orange-100 text-orange-500",
-        link: "text-orange-500 underline-offset-4 hover:underline",
-      },
-      size: {
-        normal: "h-[3.1215rem] px-4 py-2",
-        small: "h-[2.625rem] px-3",
-        large: "h-[3.75rem] px-6",
-      },
-      width: {
-        full_width: "w-full",
-        auto: "w-auto",
-      },
-    },
-    defaultVariants: {
-      variant: "primary",
-      size: "normal",
-      width: "auto",
-    },
-  }
-);
-
-const MainButton = forwardRef(
-  (
-    {
-      text,
-      form,
-      isLoading = false,
-      action,
-      disabled = false,
-      isSubmitable,
-      width = "auto",
-      dataLoadingText = "Please wait ...",
-      variant = "primary",
-      className,
-      iconRoute,
-      rightIconRoute,
-      rightIconClass = "w-[24px] h-[24px]",
-      iconComponent,
-      size = "normal",
-      ...props
-    },
-    ref
-  ) => {
-    return !isLoading ? (
-      <button
-        form={form}
-        className={cn(buttonVariants({ variant, size, width, className }))}
-        onClick={!disabled ? action : undefined}
-        type={isSubmitable ? "submit" : "button"}
-        ref={ref}
-        disabled={disabled}
-        {...props}
-      >
-        {iconRoute && (
-          <img src={iconRoute} alt="left icon" className="w-6 h-6" />
-        )}
-        {iconComponent}
+const Button = ({
+  width = "w-auto",
+  height = "h-auto",
+  text = "Button",
+  onClick,
+  className = "",
+}) => {
+  return (
+    <div
+      onClick={onClick}
+      className={`relative group overflow-hidden flex items-center justify-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-lg bg-[#ff6600] transition duration-700 ease-in-out cursor-pointer ${className} ${width} ${height}`}
+      style={{ minWidth: "120px", minWidth: { md: "150px" } }} // Fixed the style object syntax
+    >
+      {/* Button text with z-index to stay above the animation */}
+      <span className="relative z-10 text-center text-[#FFF] font-dm-sans font-semibold text-lg md:text-xl whitespace-nowrap flex-shrink-0">
         {text}
-        {rightIconRoute && (
-          <img
-            src={rightIconRoute}
-            alt="right icon"
-            className={rightIconClass}
-          />
-        )}
-      </button>
-    ) : (
-      <button
-        className={cn(
-          buttonVariants({ variant: "primary", size, width, className }),
-          "cursor-not-allowed"
-        )}
-        ref={ref}
-        disabled
-      >
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        {dataLoadingText}
-      </button>
-    );
-  }
-);
+      </span>
 
-MainButton.displayName = "MainButton";
+      <Image
+        src={rectangleIcon}
+        alt="Rectangle background"
+        layout="fill"
+        objectFit="cover" // Maintain aspect ratio while covering parent container
+        className="transform translate-x-[-100%] translate-y-[100%] group-hover:translate-x-[100%] group-hover:-translate-y-[100%] transition-transform duration-1000 ease-in-out"
+      />
+    </div>
+  );
+};
 
-export { MainButton, buttonVariants };
+export default Button;
