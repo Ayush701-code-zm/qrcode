@@ -1,21 +1,23 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/ui/button";
 import bannerImage from "../../../public/images/banner.jpeg";
+import { ArrowRight, Wand2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
-  const imageRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const imageElement = imageRef.current;
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const scrollThreshold = 100;
       if (scrollPosition > scrollThreshold) {
-        imageElement.classList.add("scrolled");
+        setScrolled(true);
       } else {
-        imageElement.classList.remove("scrolled");
+        setScrolled(false);
       }
     };
 
@@ -23,48 +25,154 @@ const HeroSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Enhanced animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
+  const fadeDown = {
+    hidden: { opacity: 0, y: -40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-full max-w-[1300px] flex justify-center px-4">
-        <section className="mt-[50px] w-full">
-          <div className="flex flex-col items-center text-center">
-            <h1 className="text-4xl md:text-5xl font-bold gradient-title">
-              Express Yourself With Scannable Fashion Designs
-            </h1>
-            <p className="text-lightBlue text-base max-w-2xl mt-4">
-              Create custom QR codes that blend technology with style. Design,
-              generate, and print your personalized QR patterns on high-quality
-              apparel that&apos;s uniquely you.
-            </p>
-          </div>
+    <div className="w-full overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Left column - Text content */}
+          <motion.div 
+            className="order-2 lg:order-1 mt-8 lg:mt-0 text-center lg:text-left"
+            variants={fadeIn}
+          >
+            <motion.div className="relative">
+              <motion.h1 
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
+                variants={fadeDown}
+              >
+                Express Yourself With Scannable Fashion Designs
+              </motion.h1>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center mt-8 gap-4 w-full">
-            <div className="w-full sm:w-1/2">
-              <Button
-                text="Design Your QR"
-                width="w-full transition-all duration-300"
-                height="h-12"
-                className="flex items-center justify-center gap-2"
-              />
-            </div>
-          </div>
+              <motion.p
+                className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-6 max-w-lg mx-auto lg:mx-0"
+                variants={fadeUp}
+              >
+                Create custom QR codes that blend technology with style. Design, generate, and print your personalized QR patterns on high-quality apparel that&apos;s uniquely you.
+              </motion.p>
 
-          <div className="relative hero-image-wrapper h-auto mt-8 mb-5 flex justify-center">
-            <div
-              ref={imageRef}
-              className="hero-image rounded-lg shadow-2xl border overflow-hidden transition-transform duration-300 w-full max-w-[1200px]"
+              <motion.div
+                className="mt-8 max-w-xs sm:max-w-sm mx-auto lg:mx-0"
+                variants={fadeUp}
+              >
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.05,
+                    boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.15)",
+                    transition: { type: "spring", stiffness: 400, damping: 20 }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button
+                    text={
+                      <div className="flex items-center justify-center gap-2">
+                        <Wand2 size={18} />
+                        <span>Design Your QR</span>
+                        <motion.div
+                          animate={{
+                            x: [0, 5, 0],
+                            transition: {
+                              repeat: Infinity,
+                              duration: 1.5,
+                              ease: "easeOut",
+                              repeatDelay: 0.5,
+                            },
+                          }}
+                        >
+                          <ArrowRight size={18} />
+                        </motion.div>
+                      </div>
+                    }
+                    width="w-full"
+                    height="h-12"
+                    className="flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 transition-all duration-300"
+                  />
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+
+          {/* Right column - Image */}
+          <motion.div 
+            className="order-1 lg:order-2 flex justify-center"
+            variants={fadeDown}
+          >
+            <motion.div 
+              className="relative rounded-xl shadow-2xl border overflow-hidden w-full max-w-md lg:max-w-full"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ 
+                opacity: 1, 
+                scale: scrolled ? 0.98 : 1,
+                transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+              }}
+              whileHover={{ 
+                scale: 1.02,
+                boxShadow: "0px 25px 50px rgba(0, 0, 0, 0.18)",
+                transition: { type: "spring", stiffness: 400, damping: 20 }
+              }}
             >
-              <Image
-                src={bannerImage}
-                alt="QR Fashion Showcase"
-                className="object-cover w-full h-auto"
-                priority
-                width={1200} // Explicit width for image optimization
-                height={800} // Explicit height for image optimization
-              />
-            </div>
-          </div>
-        </section>
+              {/* Using static height instead of aspect ratio for better control */}
+              <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+                <Image
+                  src={bannerImage}
+                  alt="QR Fashion Showcase"
+                  className="object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                  priority
+                />
+                
+                {/* Image overlay with gradient */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.6, transition: { delay: 0.4, duration: 0.8 } }}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

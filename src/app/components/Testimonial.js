@@ -77,10 +77,10 @@ const TestimonialsMarquee = () => {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300">
             QR Fashion Success Stories
           </h1>
-          <p className="text-xl text-lightBlue dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
             Discover how our customers are using QR code fashion to connect
             their physical style with their digital presence.
           </p>
@@ -98,19 +98,26 @@ const TestimonialsMarquee = () => {
             ))}
           </div>
         ) : (
-          // Desktop view: Marquee animation
+          // Desktop view: Marquee animation with improved smoothness
           <div
             className="flex items-center justify-center mx-auto overflow-hidden relative py-8"
             style={{ width: "90%" }}
           >
-            {/* Gradient blend effect on left */}
-            <div className="absolute h-full w-24 top-0 left-0 bottom-0 bg-gradient-to-l from-transparent z-10"></div>
+            {/* Improved gradient fade on left - smoother and wider */}
+            <div className="absolute h-full w-32 top-0 left-0 bottom-0 bg-gradient-to-r from-white to-transparent dark:from-gray-900 z-10"></div>
 
-            <div className="w-full px-8">
-              <Marquee gradient={false} speed={40} className="py-4 z-0">
-                {testimonials.map((testimonial) => (
+            <div className="w-full">
+              {/* Duplicated testimonials and decreased speed for smoother animation */}
+              <Marquee 
+                gradient={false} 
+                speed={25} 
+                className="py-4 z-0"
+                pauseOnHover={true}
+              >
+                {/* Duplicate testimonials for smoother looping */}
+                {[...testimonials, ...testimonials].map((testimonial, index) => (
                   <TestimonialCard
-                    key={testimonial.id}
+                    key={`${testimonial.id}-${index}`}
                     testimonial={testimonial}
                     isMobile={false}
                   />
@@ -118,8 +125,8 @@ const TestimonialsMarquee = () => {
               </Marquee>
             </div>
 
-            {/* Gradient blend effect on right */}
-            <div className="absolute h-full w-24 top-0 right-0 bottom-0 bg-gradient-to-r from-transparent z-10"></div>
+            {/* Improved gradient fade on right - smoother and wider */}
+            <div className="absolute h-full w-32 top-0 right-0 bottom-0 bg-gradient-to-l from-white to-transparent dark:from-gray-900 z-10"></div>
           </div>
         )}
 
@@ -138,7 +145,7 @@ function TestimonialCard({ testimonial, isMobile }) {
     <div
       className={`relative bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden flex-shrink-0 ${
         isMobile ? "w-full mx-0" : "mx-6"
-      } flex flex-col`}
+      } flex flex-col hover:shadow-xl transition-all duration-500 ease-in-out`}
       style={{
         width: isMobile ? "100%" : "350px",
         height: isMobile ? "auto" : "400px",
@@ -146,25 +153,25 @@ function TestimonialCard({ testimonial, isMobile }) {
       }}
     >
       <div
-        className="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-300 dark:from-orange-900/30 dark:to-orange-800/30 opacity-50"
+        className="absolute inset-0 bg-gradient-to-br from-purple-100 to-blue-200 dark:from-purple-900/30 dark:to-blue-800/30 opacity-50"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ff7b00' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E\")",
+            "url(\"data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234F46E5' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E\")",
           backgroundSize: "cover",
         }}
       ></div>
 
       <div className="relative p-6 flex flex-col flex-grow">
-        <div className="absolute -top-1 left-4 text-5xl text-orange-500 font-serif">
+        <div className="absolute -top-1 left-4 text-5xl text-blue-500 font-serif">
           &quot;
         </div>
 
         <div className="pt-8 pb-2 flex-grow">
-          <h3 className="text-center text-orange-500 font-bold text-xl mb-4">
+          <h3 className="text-center bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 font-bold text-xl mb-4">
             CUSTOMER STORY
           </h3>
           <div className={`${isMobile ? "" : "overflow-y-auto max-h-40"}`}>
-            <p className="text-lightBlue dark:text-gray-300 text-center">
+            <p className="text-gray-700 dark:text-gray-300 text-center">
               {testimonial.text}
             </p>
           </div>
@@ -176,7 +183,7 @@ function TestimonialCard({ testimonial, isMobile }) {
               key={i}
               className={`h-5 w-5 ${
                 i < testimonial.rating
-                  ? "text-orange-500"
+                  ? "text-blue-500"
                   : "text-gray-300 dark:text-gray-600"
               }`}
               fill="currentColor"
@@ -191,7 +198,7 @@ function TestimonialCard({ testimonial, isMobile }) {
           <p className="font-bold text-gray-900 dark:text-white">
             {testimonial.author}
           </p>
-          <p className="text-sm text-lightBlue dark:text-gray-400">
+          <p className="text-sm text-gray-700 dark:text-gray-400">
             {testimonial.role}
           </p>
         </div>
