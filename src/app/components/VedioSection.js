@@ -465,24 +465,24 @@ function AboutWithVideoSection() {
                 className="mt-2 sm:mt-4 relative z-10"
                 variants={fadeUp}
               >
-                <motion.div
-                  whileHover={{
-                    scale: 1.05,
-                    boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.3)",
-                    transition: { type: "spring", stiffness: 400, damping: 20 }
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    text={
-                      <div className="flex items-center justify-center gap-2">
-                        <Sparkles size={18} />
-                        <span>Get Started Free</span>
-                      </div>
-                    }
-                    className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 shadow-lg bg-white text-purple-600 border-4 border-white hover:bg-gray-50 font-semibold px-8 rounded-lg transition-all duration-300 dark:bg-gray-900 dark:text-purple-300 dark:border-gray-700 dark:hover:bg-gray-800"
-                  />
-                </motion.div>
+              <motion.div
+  whileHover={{
+    scale: 1.05,
+    boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.3)",
+    transition: { type: "spring", stiffness: 400, damping: 20 }
+  }}
+  whileTap={{ scale: 0.98 }}
+>
+  <Button
+    text={
+      <div className="flex items-center justify-center gap-2">
+        <Sparkles size={18} />
+        <span className="text-gray-800 dark:text-gray-100">Get Started Free</span>
+      </div>
+    }
+    className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 shadow-lg bg-white text-purple-600 border-4 border-white hover:bg-gray-50 font-semibold px-8 rounded-lg transition-all duration-300 dark:bg-gray-900 dark:text-purple-300 dark:border-gray-700 dark:hover:bg-gray-800"
+  />
+</motion.div>
               </motion.div>
             </motion.div>
           </div>
