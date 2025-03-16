@@ -24,8 +24,8 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className="w-full  flex justify-center">
-      <div className="w-full  max-w-[1300px] flex justify-center px-4">
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-[1300px] flex justify-center px-4">
         <section className="mt-[50px] w-full">
           <div className="flex flex-col items-center text-center">
             <h1 className="text-4xl md:text-5xl font-bold gradient-title">
@@ -59,6 +59,8 @@ const HeroSection = () => {
                 alt="QR Fashion Showcase"
                 className="object-cover w-full h-auto"
                 priority
+                width={1200} // Explicit width for image optimization
+                height={800} // Explicit height for image optimization
               />
             </div>
           </div>

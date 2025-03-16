@@ -71,12 +71,20 @@ function NavBar() {
                 aria-label="Close menu" // Accessibility improvement
               />
             ) : (
-              <img
+              // <Image
+              //   src="/icons/hamburger.svg"
+              //   alt="menu"
+              //   className="cursor-pointer animate-in fade-in zoom-in"
+              //   onClick={toggleMenu}
+              //   aria-label="Open menu" // Accessibility improvement
+              // />
+              <Image
                 src="/icons/hamburger.svg"
-                alt="menu"
-                className="cursor-pointer animate-in fade-in zoom-in"
+                alt="logo"
+                width={35} // Adjusted for mobile view
+                height={35}
                 onClick={toggleMenu}
-                aria-label="Open menu" // Accessibility improvement
+                aria-label="Open menu"
               />
             )}
           </div>
