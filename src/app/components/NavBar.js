@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import Button from "../../components/ui/button";
 import ModeToggle from "@/components/ModeToggle"; // Importing the dark mode toggle component
+import Image from "next/image"; // Importing Next.js's Image component for optimization
 
 function NavBar() {
   const [menu, setMenu] = useState(false);
@@ -17,18 +18,22 @@ function NavBar() {
       <div className="hidden lg:block animate-in fade-in zoom-in bg-white dark:bg-gray-900 p-4">
         <div className="flex justify-between md:mx-[9rem] items-center">
           <div>
-            <img src="/images/epixelap_logo.png" alt="logo" />
+            <Image
+              src="/images/epixelap_logo.png"
+              alt="logo"
+              width={100} // Specify width
+              height={100} // Specify height
+            />
           </div>
           <div className="flex gap-[20px] xl:gap-[50px] text-[16px] items-center select-none">
-            <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-              Home
-            </p>
-            <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-              About Us
-            </p>
-            <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-              Contacts
-            </p>
+            {["Home", "About Us", "Contacts"].map((item) => (
+              <p
+                key={item}
+                className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white"
+              >
+                {item}
+              </p>
+            ))}
           </div>
           <div className="flex items-center gap-[40px] select-none">
             <ModeToggle /> {/* Dark mode toggle button */}
@@ -36,7 +41,7 @@ function NavBar() {
               text="Buy Now"
               width="w-35 hover:w-36 transition-all duration-300"
               height="h-12"
-              className="flex items-center justify-center gap-2 "
+              className="flex items-center justify-center gap-2"
             />
           </div>
         </div>
@@ -50,10 +55,11 @@ function NavBar() {
       >
         <div className="flex justify-between mx-[10px]">
           <div className="flex gap-[50px] text-[16px] items-center select-none">
-            <img
+            <Image
               src="/images/epixelap_logo.png"
               alt="logo"
-              className="w-[7rem]"
+              width={70} // Adjusted for mobile view
+              height={70}
             />
           </div>
           <div className="flex items-center gap-[20px]">
@@ -62,6 +68,7 @@ function NavBar() {
               <X
                 className="cursor-pointer animate-in fade-in zoom-in text-black dark:text-white"
                 onClick={toggleMenu}
+                aria-label="Close menu" // Accessibility improvement
               />
             ) : (
               <img
@@ -69,26 +76,23 @@ function NavBar() {
                 alt="menu"
                 className="cursor-pointer animate-in fade-in zoom-in"
                 onClick={toggleMenu}
+                aria-label="Open menu" // Accessibility improvement
               />
             )}
           </div>
         </div>
 
-        {menu ? (
+        {menu && (
           <div className="my-8 select-none animate-in slide-in-from-right">
             <div className="flex flex-col gap-8 mt-8 mx-4">
-              <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-                Home
-              </p>
-              <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-                About Us
-              </p>
-              <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-                Our App
-              </p>
-              <p className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white">
-                Contacts
-              </p>
+              {["Home", "About Us", "Our App", "Contacts"].map((item) => (
+                <p
+                  key={item}
+                  className="hover:text-primary cursor-pointer flex items-center gap-2 font-[500] text-gray dark:text-white"
+                >
+                  {item}
+                </p>
+              ))}
 
               <div className="flex flex-col gap-[40px] select-none">
                 <Button
@@ -100,7 +104,7 @@ function NavBar() {
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );
