@@ -1,6 +1,7 @@
 import NewsletterSection from "../app/components/NewsLetters";
 import VedioSection from "../app/components/VedioSection";
 import ContactFormSection from "./components/ContactForm";
+import FAQSection from "./components/Faq";
 import FooterSection from "./components/FooterSection";
 import HeroSection from "./components/HeroSection";
 import NavBar from "./components/NavBar";
@@ -15,8 +16,10 @@ export default function Home() {
         <VedioSection />
         <NewsletterSection />
         <ContactFormSection />
+        < FAQSection />
         <TestimonialsPage />
         <FooterSection />
+      
       </div>
     </main>
   );
