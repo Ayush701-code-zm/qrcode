@@ -36,7 +36,7 @@ function NavBar() {
               text="Buy Now"
               width="w-35 hover:w-36 transition-all duration-300"
               height="h-12"
-              className="flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-2 "
             />
           </div>
         </div>

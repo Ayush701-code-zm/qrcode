@@ -5,46 +5,50 @@ import Button from "../../components/ui/button";
 
 function Newsletter() {
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-full max-w-[1500px] flex justify-center px-4">
-        <section className="mt-[50px] w-full">
-          <div className="flex flex-col items-center">
-            <Header
-              title="Our newsletter"
-              subtitle="Subscribe Our Newsletter"
-            />
+    <div className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-12">
+      <div className="w-full max-w-[1300px] mx-auto">
+        <section>
+          {/* Centered Header */}
+          <div className="text-center">
+            <Header subtitle="Subscribe to Our Style Newsletter" />
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center mt-8 md:mt-[3.31rem] w-full">
-            <div className="flex justify-center md:justify-start mb-6 md:mb-0 md:w-2/5">
+          {/* Main Content */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 lg:gap-16 mt-6 md:mt-12">
+            {/* Image - improved sizing for better display on all screen sizes */}
+            <div className="w-full md:w-2/5 flex justify-center mb-6 md:mb-0">
               <img
                 src="/images/newsletter_large_icon.png"
-                alt="large envelop image"
-                className="w-[10rem] md:w-full"
+                alt="Large envelope"
+                className="w-[280px] sm:w-[320px] md:w-[90%] lg:w-full h-auto object-contain"
               />
             </div>
 
-            <div className="md:w-3/5 md:pl-8 w-full">
-              <p className="mb-[1.44rem] text-normal font-semibold text-center md:text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam
+            {/* Text & Form - responsive alignment with reduced text size on medium screens */}
+            <div className="w-full md:w-3/5 flex flex-col">
+              <p className="mb-6 text-base md:text-sm lg:text-normal font-semibold text-center md:text-left">
+                Be the first to discover new QR design trends, limited edition
+                patterns, and exclusive tutorials for creating your own custom
+                QR codes for apparel. Our weekly newsletter features design
+                inspiration, promotional offers, and early access to new
+                customization tools. Join our community of fashion-forward tech
+                enthusiasts who express their unique style through wearable QR
+                designs.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
-                <div className="w-full sm:w-1/2">
-                  <Input
-                    type="email"
-                    placeholder="Your E-mail here..."
-                    className="h-[3.8125rem] rounded-[3.0625rem] newsletter-box-shadow w-full"
-                  />
-                </div>
-                <div className="w-full sm:w-1/2">
+              {/* Fully responsive form layout with custom breakpoints */}
+              <div className="w-full grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
+                <Input
+                  type="email"
+                  placeholder="Your email address..."
+                  className="h-12 sm:h-[3.8125rem] rounded-full newsletter-box-shadow w-full"
+                />
+                <div className="w-full">
                   <Button
-                    text="Get Demo"
-                    width="w-full transition-all duration-300"
-                    height="h-15"
-                    className="flex items-center justify-center gap-2"
+                    text="Subscribe Now"
+                    width="w-full"
+                    height="h-12 sm:h-[3.8125rem]"
+                    className="flex items-center justify-center gap-2 rounded-full transition-all duration-300 w-full"
                   />
                 </div>
               </div>
