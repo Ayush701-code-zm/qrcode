@@ -34,7 +34,7 @@ const HeroSection = () => {
             <p className="text-lightBlue text-base max-w-2xl mt-4">
               Create custom QR codes that blend technology with style. Design,
               generate, and print your personalized QR patterns on high-quality
-              apparel that's uniquely you.
+              apparel that&apos;s uniquely you.
             </p>
           </div>
 

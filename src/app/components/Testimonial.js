@@ -156,7 +156,7 @@ function TestimonialCard({ testimonial, isMobile }) {
 
       <div className="relative p-6 flex flex-col flex-grow">
         <div className="absolute -top-1 left-4 text-5xl text-orange-500 font-serif">
-          "
+          &quot;
         </div>
 
         <div className="pt-8 pb-2 flex-grow">
