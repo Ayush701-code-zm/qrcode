@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import Button from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import Header from "@/components/commons/Header";
-import Box from "@/components/ui/box";
 
 function ContactFormSection() {
   return (
@@ -19,9 +21,11 @@ function ContactFormSection() {
             {/* Left side - Image */}
             <div className="w-full md:w-1/2">
               <div className="relative h-full min-h-64 md:min-h-96">
-                <img
+                <Image
                   src="/images/video_player.png"
                   alt="QR code fashion designs"
+                  width={500}
+                  height={400}
                   className="rounded-lg object-cover w-full h-full"
                 />
               </div>
@@ -48,18 +52,22 @@ function ContactFormSection() {
                       placeholder="Your Name"
                       className="p-3 rounded-md"
                     />
-
                     <Input
                       type="email"
                       placeholder="Email Address"
                       className="p-3 rounded-md"
                     />
-
                     <Input
                       type="text"
                       placeholder="Subject"
                       className="p-3 rounded-md"
                     />
+                    {/* 
+                    Phone Input Field
+                    <PhoneInput
+                      country={"us"}
+                      inputClass="w-full p-3 rounded-md border border-gray-300"
+                    /> */}
 
                     <Textarea
                       placeholder="Tell us about your QR code design idea or question"
@@ -67,12 +75,11 @@ function ContactFormSection() {
                     />
                   </div>
 
+                  {/* Submit Button */}
                   <div>
                     <Button
                       text="Send Message"
-                      width="w-full transition-all duration-300"
-                      height="h-15"
-                      className="flex items-center justify-center gap-2"
+                      className="w-full h-12 flex items-center justify-center gap-2 transition-all duration-300"
                     />
                   </div>
                 </form>

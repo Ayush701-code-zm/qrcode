@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import Image from "next/image";
 import Button from "../../components/ui/button";
 import Header from "@/components/commons/Header";
 
@@ -8,9 +11,9 @@ function VideoSection() {
       <div className="w-full max-w-[1300px]">
         <Header subtitle="Our Design Process" />
         <div className="mt-6 md:mt-9">
-          {/* Flex container adjusted for responsiveness */}
+          {/* Responsive Flex Container */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16">
-            {/* Left side - Text Content */}
+            {/* Left Side - Text Content */}
             <div className="w-full md:w-1/2 max-w-full md:max-w-[500px] lg:max-w-[600px] flex flex-col">
               <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-8">
                 <h2 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-bold text-[#1E0E62] tracking-tight">
@@ -33,20 +36,20 @@ function VideoSection() {
                 <div className="mt-2 sm:mt-4">
                   <Button
                     text="Watch How It Works"
-                    width="w-full sm:w-auto transition-all duration-300"
-                    height="h-12 sm:h-14"
-                    className="flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto h-12 sm:h-14 flex items-center justify-center gap-2 transition-all duration-300"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Right side - Image */}
+            {/* Right Side - Image */}
             <div className="w-full md:w-1/2 md:min-w-[300px] flex justify-center mt-8 md:mt-0">
               <div className="relative w-full md:w-[90%] lg:w-full h-auto">
-                <img
+                <Image
                   src="/images/video_player.png"
                   alt="QR Design Process Video"
+                  width={500}
+                  height={400}
                   className="rounded-lg object-cover w-full h-auto shadow-md"
                 />
               </div>
