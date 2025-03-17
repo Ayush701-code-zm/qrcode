@@ -82,7 +82,7 @@ const HeroSection = () => {
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
                 variants={fadeDown}
               >
-                Express Yourself With Scannable Fashion Designs
+                Your QR, Your Style
               </motion.h1>
 
               <motion.p
