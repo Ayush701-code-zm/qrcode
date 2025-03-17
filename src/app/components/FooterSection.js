@@ -70,7 +70,7 @@ function FooterSection() {
           >
             <Image
               src="/images/footer_logo.png"
-              alt="Epixelab Footer Logo"
+              alt="Artofqr"
               width={150}
               height={50}
               className="object-contain mb-4"
@@ -162,7 +162,7 @@ function FooterSection() {
           variants={fadeIn}
         >
           <p className="text-gray-700 dark:text-gray-300 text-center md:text-left">
-            © {new Date().getFullYear()} Epixelab. All rights reserved.
+            © {new Date().getFullYear()} Artofqr. All rights reserved.
           </p>
 
           <div className="flex flex-wrap gap-6 justify-center">
