@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/ui/button";
-import bannerImage from "../../../public/images/banner.jpeg";
+import bannerImage from "../../../public/images/freepik.jpg";
 import { ArrowRight, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -31,8 +31,8 @@ const HeroSection = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const fadeDown = {
@@ -40,16 +40,16 @@ const HeroSection = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const staggerContainer = {
@@ -58,27 +58,27 @@ const HeroSection = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.15,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   return (
     <div className="w-full overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-        <motion.div 
+      <div className="container mx-auto px-4  sm:px-6 lg:px-8 py-12 lg:py-20">
+        <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
           {/* Left column - Text content */}
-          <motion.div 
+          <motion.div
             className="order-2 lg:order-1 mt-8 lg:mt-0 text-center lg:text-left"
             variants={fadeIn}
           >
             <motion.div className="relative">
-              <motion.h1 
+              <motion.h1
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
                 variants={fadeDown}
               >
@@ -89,7 +89,9 @@ const HeroSection = () => {
                 className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-6 max-w-lg mx-auto lg:mx-0"
                 variants={fadeUp}
               >
-                Create custom QR codes that blend technology with style. Design, generate, and print your personalized QR patterns on high-quality apparel that&apos;s uniquely you.
+                Create custom QR codes that blend technology with style. Design,
+                generate, and print your personalized QR patterns on
+                high-quality apparel that&apos;s uniquely you.
               </motion.p>
 
               <motion.div
@@ -97,10 +99,10 @@ const HeroSection = () => {
                 variants={fadeUp}
               >
                 <motion.div
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.05,
                     boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.15)",
-                    transition: { type: "spring", stiffness: 400, damping: 20 }
+                    transition: { type: "spring", stiffness: 400, damping: 20 },
                   }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -134,22 +136,22 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Right column - Image */}
-          <motion.div 
+          <motion.div
             className="order-1 lg:order-2 flex justify-center"
             variants={fadeDown}
           >
-            <motion.div 
+            <motion.div
               className="relative rounded-xl shadow-2xl border overflow-hidden w-full max-w-md lg:max-w-full"
               initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ 
-                opacity: 1, 
+              animate={{
+                opacity: 1,
                 scale: scrolled ? 0.98 : 1,
-                transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+                transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
               }}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.02,
                 boxShadow: "0px 25px 50px rgba(0, 0, 0, 0.18)",
-                transition: { type: "spring", stiffness: 400, damping: 20 }
+                transition: { type: "spring", stiffness: 400, damping: 20 },
               }}
             >
               {/* Using static height instead of aspect ratio for better control */}
@@ -162,12 +164,15 @@ const HeroSection = () => {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                   priority
                 />
-                
+
                 {/* Image overlay with gradient */}
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.6, transition: { delay: 0.4, duration: 0.8 } }}
+                  animate={{
+                    opacity: 0.6,
+                    transition: { delay: 0.4, duration: 0.8 },
+                  }}
                 />
               </div>
             </motion.div>
