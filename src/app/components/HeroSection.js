@@ -65,7 +65,7 @@ const HeroSection = () => {
 
   return (
     <div className="w-full overflow-hidden">
-      <div className="container mx-auto px-4  sm:px-6 lg:px-8 py-12 lg:py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
           variants={staggerContainer}
@@ -141,7 +141,7 @@ const HeroSection = () => {
             variants={fadeDown}
           >
             <motion.div
-              className="relative rounded-xl shadow-2xl border overflow-hidden w-full max-w-md lg:max-w-full"
+              className="relative rounded-xl shadow-2xl border overflow-hidden w-full"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{
                 opacity: 1,
@@ -154,8 +154,8 @@ const HeroSection = () => {
                 transition: { type: "spring", stiffness: 400, damping: 20 },
               }}
             >
-              {/* Using static height instead of aspect ratio for better control */}
-              <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+              {/* Using aspect ratio instead of fixed height for responsiveness */}
+              <div className="relative w-full pb-[75%] sm:pb-[80%] md:pb-[75%] lg:pb-[70%]">
                 <Image
                   src={bannerImage}
                   alt="QR Fashion Showcase"

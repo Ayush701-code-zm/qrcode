@@ -18,8 +18,8 @@ function ContactFormSection() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const fadeDown = {
@@ -27,16 +27,16 @@ function ContactFormSection() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const staggerContainer = {
@@ -45,9 +45,9 @@ function ContactFormSection() {
       opacity: 1,
       transition: {
         staggerChildren: 0.15,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const formFieldVariants = {
@@ -55,13 +55,13 @@ function ContactFormSection() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   return (
     <div className="w-full flex justify-center overflow-hidden">
-      <motion.section 
+      <motion.section
         className="w-full max-w-[1350px] py-8 md:py-12 px-4"
         initial="hidden"
         whileInView="visible"
@@ -74,16 +74,13 @@ function ContactFormSection() {
         <div className="container mx-auto mt-9">
           <div className="flex flex-col md:flex-row gap-8 md:gap-16">
             {/* Left side - Image */}
-            <motion.div 
-              className="w-full md:w-1/2"
-              variants={fadeIn}
-            >
-              <motion.div 
+            <motion.div className="w-full md:w-1/2" variants={fadeIn}>
+              <motion.div
                 className="relative h-full min-h-64 md:min-h-96"
-                whileHover={{ 
+                whileHover={{
                   scale: 1.02,
                   boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.15)",
-                  transition: { type: "spring", stiffness: 300, damping: 20 }
+                  transition: { type: "spring", stiffness: 300, damping: 20 },
                 }}
               >
                 <Image
@@ -97,19 +94,16 @@ function ContactFormSection() {
             </motion.div>
 
             {/* Right side - Form */}
-            <motion.div 
-              className="w-full md:w-1/2"
-              variants={fadeUp}
-            >
+            <motion.div className="w-full md:w-1/2" variants={fadeUp}>
               <div className="flex flex-col gap-8">
                 <motion.div variants={fadeUp}>
-                  <motion.h2 
+                  <motion.h2
                     className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300"
                     variants={fadeDown}
                   >
                     Questions About Custom QR Fashion?
                   </motion.h2>
-                  <motion.p 
+                  <motion.p
                     className="text-gray-700 dark:text-gray-300 text-base"
                     variants={fadeUp}
                   >
@@ -119,14 +113,14 @@ function ContactFormSection() {
                   </motion.p>
                 </motion.div>
 
-                <motion.form 
+                <motion.form
                   className="flex flex-col gap-6"
                   variants={staggerContainer}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.1 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="flex flex-col gap-4"
                     variants={staggerContainer}
                   >
@@ -157,7 +151,7 @@ function ContactFormSection() {
                       country={"us"}
                       inputClass="w-full p-3 rounded-md border border-gray-300"
                     /> */}
-                    
+
                     <motion.div variants={formFieldVariants}>
                       <Textarea
                         placeholder="Tell us about your QR code design idea or question"
@@ -169,9 +163,13 @@ function ContactFormSection() {
                   {/* Submit Button */}
                   <motion.div
                     variants={fadeUp}
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.03,
-                      transition: { type: "spring", stiffness: 400, damping: 20 }
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                      },
                     }}
                     whileTap={{ scale: 0.98 }}
                   >
