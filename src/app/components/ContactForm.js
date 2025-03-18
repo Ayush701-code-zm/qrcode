@@ -84,11 +84,11 @@ function ContactFormSection() {
                 }}
               >
                 <Image
-                  src="/images/video_player.png"
+                  src="/images/WhatsApp_contact.jpg"
                   alt="QR code fashion designs"
                   width={500}
                   height={400}
-                  className="rounded-lg object-cover w-full h-full shadow-lg border border-gray-100 dark:border-gray-700"
+                  className="rounded-lg object-cover w-full h-full max-h-125 shadow-lg border border-gray-100 dark:border-gray-700"
                 />
               </motion.div>
             </motion.div>

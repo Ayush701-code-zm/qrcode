@@ -31,17 +31,17 @@ function NavBar() {
   useEffect(() => {
     const handleActiveSection = () => {
       const sections = navItems.map((item) => item.id);
-      
+
       // Find the section closest to the top of the viewport
       let currentSection = null;
       let minDistance = Infinity;
-      
+
       sections.forEach((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
           const distance = Math.abs(rect.top);
-          
+
           // If this section is closer to the top than previous ones
           if (distance < minDistance) {
             minDistance = distance;
@@ -49,15 +49,15 @@ function NavBar() {
           }
         }
       });
-      
+
       if (currentSection) {
         setActiveSection(currentSection);
       }
     };
-    
+
     // Initial check
     handleActiveSection();
-    
+
     window.addEventListener("scroll", handleActiveSection);
     return () => window.removeEventListener("scroll", handleActiveSection);
   }, []);
@@ -138,7 +138,7 @@ function NavBar() {
     hover: {
       scale: 1.03,
       boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.15)",
-      transition: { type: "spring", stiffness: 400, damping: 20 }
+      transition: { type: "spring", stiffness: 400, damping: 20 },
     },
     tap: {
       scale: 0.98,
@@ -150,40 +150,40 @@ function NavBar() {
     hover: {
       scale: 1.05,
       color: "var(--color-primary)",
-      transition: { type: "spring", stiffness: 300, damping: 10 }
-    }
+      transition: { type: "spring", stiffness: 300, damping: 10 },
+    },
   };
 
   // Logo hover animation - Fixed to use keyframes instead of spring
   const logoHoverVariants = {
     hover: {
       scale: 1.05,
-      transition: { type: "spring", stiffness: 400, damping: 10 }
+      transition: { type: "spring", stiffness: 400, damping: 10 },
     },
-    tap: { 
+    tap: {
       scale: 0.95,
-      transition: { type: "spring", stiffness: 400, damping: 10 }
-    }
+      transition: { type: "spring", stiffness: 400, damping: 10 },
+    },
   };
 
   const navItems = [
     { name: "Home", id: "hero" },
     { name: "About Us", id: "about" },
-    { name: "Contacts", id: "contact" }
+    { name: "Contacts", id: "contact" },
   ];
-  
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
       // Close mobile menu if open
       if (menu) setMenu(false);
-      
+
       // Smooth scroll to element
       window.scrollTo({
         top: element.offsetTop - 80, // Offset for navbar height
-        behavior: "smooth"
+        behavior: "smooth",
       });
-      
+
       // Update active section immediately
       setActiveSection(id);
     }
@@ -208,7 +208,7 @@ function NavBar() {
             variants={logoHoverVariants}
             whileHover="hover"
             whileTap="tap"
-            className="relative h-12 w-24 flex items-center"
+            className="relative h-24 w-44 flex items-center"
           >
             {/* Add separate animation for the wiggle effect */}
             <motion.div
@@ -218,8 +218,8 @@ function NavBar() {
                 transition: {
                   type: "keyframes",
                   duration: 0.5,
-                  ease: "easeInOut"
-                }
+                  ease: "easeInOut",
+                },
               }}
             >
               <Image
@@ -247,15 +247,15 @@ function NavBar() {
                   variants={textAnimationVariants}
                   whileHover="hover"
                   className={`cursor-pointer font-semibold transition-colors duration-300 py-1 px-2 ${
-                    activeSection === item.id 
-                      ? "text-blue-600 dark:text-blue-400" 
+                    activeSection === item.id
+                      ? "text-blue-600 dark:text-blue-400"
                       : "text-gray-700 dark:text-gray-100"
                   }`}
                   onClick={() => scrollToSection(item.id)}
                 >
                   {item.name}
                 </motion.p>
-                
+
                 {/* Active indicator with fixed positioning */}
                 {activeSection === item.id && (
                   <motion.div
@@ -266,7 +266,7 @@ function NavBar() {
                     transition={{ duration: 0.3 }}
                   />
                 )}
-                
+
                 {/* Hover indicator (only visible when not active) */}
                 {activeSection !== item.id && (
                   <motion.div
@@ -279,8 +279,8 @@ function NavBar() {
               </motion.div>
             ))}
 
-            <motion.div 
-              whileHover={{ scale: 1.1, rotate: 360 }} 
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 360 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.5 }}
             >
@@ -320,15 +320,18 @@ function NavBar() {
 
           {/* Mobile Menu Toggle */}
           <div className="flex md:hidden items-center gap-4">
-            <motion.div 
-              whileHover={{ scale: 1.1, rotate: 360 }} 
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 360 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.5 }}
             >
               <ModeToggle />
             </motion.div>
             <motion.button
-              whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+              whileHover={{
+                scale: 1.1,
+                backgroundColor: "rgba(59, 130, 246, 0.1)",
+              }}
               whileTap={{ scale: 0.9 }}
               onClick={toggleMenu}
               className="text-gray-700 dark:text-white focus:outline-none p-2 rounded-full bg-gray-100/70 dark:bg-gray-800/50 backdrop-blur-sm transition-colors duration-300"
@@ -372,31 +375,31 @@ function NavBar() {
                       transition: { duration: 0.2 },
                     }}
                     className={`cursor-pointer w-full text-xl sm:text-2xl font-semibold py-3 relative overflow-visible ${
-                      activeSection === item.id 
-                        ? "text-blue-600 dark:text-blue-400" 
+                      activeSection === item.id
+                        ? "text-blue-600 dark:text-blue-400"
                         : "text-gray-700 dark:text-gray-100"
                     }`}
                   >
                     <span>{item.name}</span>
-                    
+
                     {/* Active indicator for mobile */}
                     {activeSection === item.id && (
-                      <motion.span 
+                      <motion.span
                         layoutId="mobileActiveIndicator"
-                        className="absolute -bottom-1 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600" 
+                        className="absolute -bottom-1 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.3 }}
                       />
                     )}
-                    
+
                     {/* Hover indicator for mobile (only visible when not active) */}
                     {activeSection !== item.id && (
-                      <motion.span 
+                      <motion.span
                         initial={{ width: 0, opacity: 0, x: "-50%" }}
                         whileHover={{ width: "50%", opacity: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="absolute -bottom-1 left-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600" 
+                        className="absolute -bottom-1 left-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600"
                       />
                     )}
                   </motion.div>

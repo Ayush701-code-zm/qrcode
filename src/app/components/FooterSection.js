@@ -69,10 +69,10 @@ function FooterSection() {
             variants={fadeIn}
           >
             <Image
-              src="/images/footer_logo.png"
+              src="/images/logo.png"
               alt="Artofqr"
-              width={150}
-              height={50}
+              width={200}
+              height={200}
               className="object-contain mb-4"
             />
             <p className="text-gray-700 dark:text-gray-300 mt-4 mb-6 max-w-md">

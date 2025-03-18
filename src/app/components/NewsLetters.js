@@ -15,8 +15,8 @@ function Newsletter() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const fadeDown = {
@@ -24,16 +24,16 @@ function Newsletter() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   const staggerContainer = {
@@ -42,9 +42,9 @@ function Newsletter() {
       opacity: 1,
       transition: {
         staggerChildren: 0.15,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   return (
@@ -64,16 +64,16 @@ function Newsletter() {
           {/* Main Content */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 lg:gap-16 mt-6 md:mt-12">
             {/* Image - optimized for all screen sizes */}
-            <motion.div 
+            <motion.div
               className="w-full md:w-2/5 flex justify-center mb-6 md:mb-0"
               variants={fadeIn}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.03,
-                transition: { type: "spring", stiffness: 300, damping: 20 }
+                transition: { type: "spring", stiffness: 300, damping: 20 },
               }}
             >
               <Image
-                src="/images/newsletter_large_icon.png"
+                src="/images/Whats_logo1.png"
                 alt="Large envelope"
                 width={320}
                 height={320}
@@ -82,11 +82,11 @@ function Newsletter() {
             </motion.div>
 
             {/* Text & Form Section */}
-            <motion.div 
+            <motion.div
               className="w-full md:w-3/5 flex flex-col"
               variants={fadeUp}
             >
-              <motion.p 
+              <motion.p
                 className="mb-6 text-base md:text-sm lg:text-normal font-semibold text-center md:text-left text-gray-700 dark:text-gray-300"
                 variants={fadeUp}
               >
@@ -100,15 +100,15 @@ function Newsletter() {
               </motion.p>
 
               {/* Responsive Form */}
-              <motion.div 
+              <motion.div
                 className="w-full grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4"
                 variants={fadeUp}
               >
                 <motion.div
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.02,
                     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.08)",
-                    transition: { type: "spring", stiffness: 400, damping: 20 }
+                    transition: { type: "spring", stiffness: 400, damping: 20 },
                   }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -119,10 +119,10 @@ function Newsletter() {
                   />
                 </motion.div>
                 <motion.div
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.03,
                     boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.15)",
-                    transition: { type: "spring", stiffness: 400, damping: 20 }
+                    transition: { type: "spring", stiffness: 400, damping: 20 },
                   }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -142,7 +142,7 @@ function Newsletter() {
         </motion.section>
       </div>
     </div>
-  ); 
+  );
 }
 
 export default Newsletter;
