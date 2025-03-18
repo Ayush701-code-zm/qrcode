@@ -169,3 +169,137 @@
   background-color: #ff7700;
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
+
+/* These styles can be placed in a global.css file or in a module.css file */
+
+@layer components {
+  /* QR Box Styles */
+  .qr-box {
+    @apply relative bg-white transform rotate-45;
+    line-height: 0.76;
+  }
+
+  .qr-text-top {
+    @apply absolute top-0 right-1 rotate-180 whitespace-pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .qr-text-bottom {
+    @apply absolute bottom-0 left-1 whitespace-pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .qr-text-left {
+    @apply absolute top-1 left-0 whitespace-pre-wrap;
+    writing-mode: vertical-rl;
+    word-wrap: break-word;
+  }
+
+  .qr-text-right {
+    @apply absolute bottom-1 right-0 whitespace-pre-wrap transform rotate-180;
+    writing-mode: vertical-rl;
+    word-wrap: break-word;
+  }
+
+  .qr-text-center {
+    @apply absolute inset-0 m-auto flex items-center justify-center;
+  }
+
+  /* Centered Format */
+  .qr-box-centered {
+    @apply relative bg-white transform rotate-45;
+    line-height: 0.76;
+  }
+
+  .qr-text-bottom-right-centered {
+    @apply absolute inset-0 flex justify-center;
+  }
+
+  .qr-text-bottom-right-centered p {
+    @apply mt-auto mb-1 mx-1;
+  }
+
+  .qr-text-bottom-right-centered.bottom {
+    @apply mb-0;
+  }
+
+  .qr-text-bottom-right-centered.left {
+    @apply rotate-90;
+  }
+
+  .qr-text-bottom-right-centered.top {
+    @apply rotate-180;
+  }
+
+  .qr-text-bottom-right-centered.right {
+    @apply -rotate-90;
+  }
+
+  /* Input and Button Styles */
+  .qr-input {
+    @apply w-full px-4 py-3 text-base rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200;
+  }
+
+  .qr-textLength {
+    @apply text-sm opacity-50;
+  }
+
+  .url-field {
+    @apply flex-1 text-base px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200;
+  }
+
+  .url-button {
+    @apply bg-blue-500 text-white px-4 py-3 rounded-lg cursor-pointer;
+  }
+
+  .url-button:hover {
+    @apply bg-blue-600;
+  }
+
+  /* Download Buttons */
+  .qr-download-button {
+    @apply inline-flex items-center px-5 py-3 bg-blue-500 text-white rounded-lg shadow-md transition-all duration-200;
+  }
+
+  .qr-download-button:hover {
+    @apply bg-blue-600;
+  }
+}
+
+/* Font face declaration */
+@font-face {
+  font-family: 'Megafont';
+  src: url('/fonts/pixel-font.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: fallback;
+}
+
+/* Animations for Framer Motion */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.scale-up {
+  animation: scaleUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

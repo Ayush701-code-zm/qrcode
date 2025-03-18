@@ -7,6 +7,7 @@ import HeroSection from "./components/HeroSection";
 import NavBar from "./components/NavBar";
 import TestimonialsPage from "./components/Testimonial";
 
+
 export default function Home() {
   return (
     <main>
