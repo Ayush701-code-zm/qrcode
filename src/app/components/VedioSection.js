@@ -73,7 +73,7 @@ function AboutWithVideoSection() {
   };
 
   return (
-    <section className="w-full overflow-hidden px-4 sm:px-6 py-12 md:py-16 mx-auto flex flex-col items-center">
+    <section id="about" className="w-full overflow-hidden px-4 sm:px-6 py-12 md:py-16 mx-auto flex flex-col items-center">
       <div className="w-full max-w-[1300px]">
         {/* Video Section */}
         <motion.div

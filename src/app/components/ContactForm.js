@@ -60,7 +60,7 @@ function ContactFormSection() {
   };
 
   return (
-    <div className="w-full flex justify-center overflow-hidden">
+    <div id="contact" className="w-full flex justify-center overflow-hidden">
       <motion.section
         className="w-full max-w-[1350px] py-8 md:py-12 px-4"
         initial="hidden"

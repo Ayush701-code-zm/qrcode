@@ -1,5 +1,5 @@
 import NewsletterSection from "../app/components/NewsLetters";
-import VedioSection from "../app/components/VedioSection";
+import VideoSection from "../app/components/VedioSection";
 import ContactFormSection from "./components/ContactForm";
 import FAQSection from "./components/Faq";
 import FooterSection from "./components/FooterSection";
@@ -11,15 +11,20 @@ export default function Home() {
   return (
     <main>
       <NavBar />
-      <div className="mt-24 mb-5 md:32 lg:mt-8 px-4  md:px-[9rem]">
-        <HeroSection />
-        <VedioSection />
+      <div className="mt-16 md:mt-20 lg:mt-24 px-4 md:px-8 lg:px-24">
+        <section id="hero">
+          <HeroSection />
+        </section>
+        <VideoSection />
         <NewsletterSection />
-        <ContactFormSection />
-        < FAQSection />
-        <TestimonialsPage />
+        <section id="contact">
+          <ContactFormSection />
+        </section>
+        <section >
+          <FAQSection />
+          <TestimonialsPage />
+        </section>
         <FooterSection />
-      
       </div>
     </main>
   );

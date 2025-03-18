@@ -6,10 +6,12 @@ import Button from "../../components/ui/button";
 import ModeToggle from "@/components/ModeToggle";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import Logo from "../../../public/images/logo.png";
 
 function NavBar() {
   const [menu, setMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
 
   // Handle scroll effect
   useEffect(() => {
@@ -23,6 +25,41 @@ function NavBar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Track active section based on scroll position - improved implementation
+  useEffect(() => {
+    const handleActiveSection = () => {
+      const sections = navItems.map((item) => item.id);
+      
+      // Find the section closest to the top of the viewport
+      let currentSection = null;
+      let minDistance = Infinity;
+      
+      sections.forEach((section) => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const distance = Math.abs(rect.top);
+          
+          // If this section is closer to the top than previous ones
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentSection = section;
+          }
+        }
+      });
+      
+      if (currentSection) {
+        setActiveSection(currentSection);
+      }
+    };
+    
+    // Initial check
+    handleActiveSection();
+    
+    window.addEventListener("scroll", handleActiveSection);
+    return () => window.removeEventListener("scroll", handleActiveSection);
   }, []);
 
   // Disable body scroll when menu is open
@@ -113,8 +150,42 @@ function NavBar() {
     hover: {
       scale: 1.05,
       color: "var(--color-primary)",
-      x: 5,
       transition: { type: "spring", stiffness: 300, damping: 10 }
+    }
+  };
+
+  // Logo hover animation - Fixed to use keyframes instead of spring
+  const logoHoverVariants = {
+    hover: {
+      scale: 1.05,
+      transition: { type: "spring", stiffness: 400, damping: 10 }
+    },
+    tap: { 
+      scale: 0.95,
+      transition: { type: "spring", stiffness: 400, damping: 10 }
+    }
+  };
+
+  const navItems = [
+    { name: "Home", id: "hero" },
+    { name: "About Us", id: "about" },
+    { name: "Contacts", id: "contact" }
+  ];
+  
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      // Close mobile menu if open
+      if (menu) setMenu(false);
+      
+      // Smooth scroll to element
+      window.scrollTo({
+        top: element.offsetTop - 80, // Offset for navbar height
+        behavior: "smooth"
+      });
+      
+      // Update active section immediately
+      setActiveSection(id);
     }
   };
 
@@ -131,44 +202,80 @@ function NavBar() {
             : "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-100/30 dark:border-gray-800/30"
         }`}
       >
-        <div className="container mx-auto px-4 flex justify-between items-center h-16 md:h-20">
+        <div className="container mx-auto px-4 md:px-8 lg:px-24 flex justify-between items-center h-16 md:h-20">
+          {/* Fixed logo animation */}
           <motion.div
-            whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            variants={logoHoverVariants}
+            whileHover="hover"
+            whileTap="tap"
+            className="relative h-12 w-24 flex items-center"
           >
-            <Image
-              src="/images/epixelap_logo.png"
-              alt="logo"
-              width={scrolled ? 50 : 60}
-              height={scrolled ? 50 : 60}
-              className="drop-shadow-md transition-all duration-300"
-            />
+            {/* Add separate animation for the wiggle effect */}
+            <motion.div
+              className="w-full h-full"
+              whileHover={{
+                rotate: [0, -5, 5, 0],
+                transition: {
+                  type: "keyframes",
+                  duration: 0.5,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              <Image
+                src={Logo}
+                alt="logo"
+                className="drop-shadow-md transition-all duration-300 object-contain"
+                fill
+                sizes="(max-width: 768px) (min-width:200px) 100px, 150px"
+                priority
+              />
+            </motion.div>
           </motion.div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            {["Home", "About Us", "Contacts"].map((item, i) => (
+            {navItems.map((item, i) => (
               <motion.div
-                key={item}
+                key={item.id}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="relative overflow-hidden"
+                className="relative group"
               >
                 <motion.p
                   variants={textAnimationVariants}
                   whileHover="hover"
-                  className="cursor-pointer font-semibold text-gray-700 dark:text-gray-100 transition-colors duration-300"
+                  className={`cursor-pointer font-semibold transition-colors duration-300 py-1 px-2 ${
+                    activeSection === item.id 
+                      ? "text-blue-600 dark:text-blue-400" 
+                      : "text-gray-700 dark:text-gray-100"
+                  }`}
+                  onClick={() => scrollToSection(item.id)}
                 >
-                  {item}
+                  {item.name}
                 </motion.p>
-                <motion.div
-                  initial={{ width: 0 }}
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.3 }}
-                  className="h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 absolute bottom-0 left-0"
-                />
+                
+                {/* Active indicator with fixed positioning */}
+                {activeSection === item.id && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 absolute -bottom-1 left-0 w-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+                
+                {/* Hover indicator (only visible when not active) */}
+                {activeSection !== item.id && (
+                  <motion.div
+                    initial={{ width: 0, opacity: 0 }}
+                    whileHover={{ width: "100%", opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 absolute -bottom-1 left-0"
+                  />
+                )}
               </motion.div>
             ))}
 
@@ -184,7 +291,6 @@ function NavBar() {
               variants={buttonHoverVariants}
               whileHover="hover"
               whileTap="tap"
-              className={`${scrolled ? "mr-0" : "mr-0"}`} // Adjust margin if needed
             >
               <Button
                 text={
@@ -205,8 +311,8 @@ function NavBar() {
                     </motion.div>
                   </div>
                 }
-                width={scrolled ? "w-32" : "w-32"} // Keep consistent width
-                height={scrolled ? "h-10" : "h-10"} // Keep consistent height
+                width="w-32"
+                height="h-10"
                 className="flex items-center justify-center shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 transition-all duration-300"
               />
             </motion.div>
@@ -234,7 +340,7 @@ function NavBar() {
         </div>
       </motion.nav>
 
-      {/* FULL SCREEN MOBILE MENU */}
+      {/* FULL SCREEN MOBILE MENU - with fixes for scrolling issues */}
       <AnimatePresence>
         {menu && (
           <motion.div
@@ -242,38 +348,57 @@ function NavBar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-white/95 dark:bg-gray-900/98 backdrop-blur-lg z-40 flex flex-col items-center justify-center"
+            className="fixed inset-0 bg-white/95 dark:bg-gray-900/98 backdrop-blur-lg z-40 flex flex-col items-center justify-center overflow-y-auto pt-20 pb-12"
           >
             <motion.div
               variants={mobileMenuVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="w-full max-w-md px-8"
+              className="w-full max-w-md px-6 sm:px-8 py-4 flex flex-col items-center"
             >
-              {["Home", "About Us", "Our App", "Contacts"].map((item, i) => (
+              {navItems.map((item, i) => (
                 <motion.div
-                  key={item}
+                  key={item.id}
                   custom={i}
                   variants={menuItemVariants}
-                  className="mb-8 text-center"
+                  className="mb-6 w-full text-center relative"
+                  onClick={() => scrollToSection(item.id)}
                 >
                   <motion.div
                     whileHover={{
                       scale: 1.05,
-                      x: 10,
                       color: "var(--color-primary)",
                       transition: { duration: 0.2 },
                     }}
-                    className="cursor-pointer text-2xl font-semibold text-gray-700 dark:text-gray-100 py-3 relative overflow-hidden group"
+                    className={`cursor-pointer w-full text-xl sm:text-2xl font-semibold py-3 relative overflow-visible ${
+                      activeSection === item.id 
+                        ? "text-blue-600 dark:text-blue-400" 
+                        : "text-gray-700 dark:text-gray-100"
+                    }`}
                   >
-                    <span>{item}</span>
-                    <motion.span 
-                      initial={{ width: 0 }}
-                      whileHover={{ width: "50%" }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600" 
-                    />
+                    <span>{item.name}</span>
+                    
+                    {/* Active indicator for mobile */}
+                    {activeSection === item.id && (
+                      <motion.span 
+                        layoutId="mobileActiveIndicator"
+                        className="absolute -bottom-1 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600" 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                    
+                    {/* Hover indicator for mobile (only visible when not active) */}
+                    {activeSection !== item.id && (
+                      <motion.span 
+                        initial={{ width: 0, opacity: 0, x: "-50%" }}
+                        whileHover={{ width: "50%", opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute -bottom-1 left-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600" 
+                      />
+                    )}
                   </motion.div>
                 </motion.div>
               ))}
@@ -281,7 +406,7 @@ function NavBar() {
               <motion.div
                 variants={menuItemVariants}
                 custom={5}
-                className="mt-12"
+                className="mt-8 w-full"
               >
                 <motion.div
                   variants={buttonHoverVariants}
