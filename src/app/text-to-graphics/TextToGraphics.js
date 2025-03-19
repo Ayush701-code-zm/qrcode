@@ -13,7 +13,7 @@ import {
 } from './help';
 import Loading from '../../components/commons/loading';
 import bwipjs from 'bwip-js';
-import { Download, Image as ImageIcon, Cog, Printer, Wand2, Layout, Code } from 'lucide-react';
+import { Download, Image as ImageIcon, Cog, Printer, Wand2, Layout, Code, Type, Palette } from 'lucide-react';
 
 const TextToGraphics = ({ config, text, setText, textInput, setTextInput, navigate }) => {
   let defaultBoxSize = 60;
@@ -31,6 +31,12 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
   const [loader, setLoader] = useState(false);
   const [loderMsg, setLoderMsg] = useState('');
   const [activeTab, setActiveTab] = useState('editor');
+  
+  // New state for font customization
+  const [fontColor, setFontColor] = useState('#000000');
+  const [fontSize, setFontSize] = useState(16);
+  const [fontWeight, setFontWeight] = useState('bold');
+  const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
   
   // Download function for PNG
   const downloadPng = async () => {
@@ -244,26 +250,30 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
         setQrSize(newSize - (textHeight + spacingBuffer) * 2);
       }
     }
-  }, [text, spacingBuffer, config?.format, defaultBoxSize]);
+  }, [text, spacingBuffer, config?.format, defaultBoxSize, fontSize]);
 
-  // Custom styles from CSS file
+  // Custom styles from CSS file with added dynamic style properties
   const customStyles = {
     qrBox: {
       position: 'relative',
-      color: 'black',
-      backgroundColor: 'white',
+      color: fontColor,
+      backgroundColor: backgroundColor,
       textAlign: 'left',
       transform: 'rotate(45deg)',
       fontFamily: 'Megafont',
       lineHeight: '0.76',
-      fontWeight: 'bold',
+      fontWeight: fontWeight,
+      fontSize: `${fontSize}px`,
     },
     qrBoxCentered: {
       position: 'relative',
-      backgroundColor: 'white',
+      backgroundColor: backgroundColor,
+      color: fontColor,
       transform: 'rotate(45deg)',
       fontFamily: 'Megafont',
       lineHeight: '0.76',
+      fontWeight: fontWeight,
+      fontSize: `${fontSize}px`,
     },
     textTop: {
       position: 'absolute',
@@ -303,7 +313,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       inset: '0',
       display: 'flex',
       justifyContent: 'center',
-      color: 'black',
+      color: fontColor,
       wordWrap: 'break-word',
       whiteSpace: 'break-spaces',
     },
@@ -327,9 +337,17 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       position: 'absolute',
       margin: 'auto',
       inset: '0',
-      color: 'black',
+      color: fontColor,
     },
   };
+
+  // Font weight options
+  const fontWeightOptions = [
+    { value: 'normal', label: 'Normal' },
+    { value: 'bold', label: 'Bold' },
+    { value: '800', label: 'Extra Bold' },
+    { value: '900', label: 'Black' },
+  ];
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
@@ -421,6 +439,96 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                     <Wand2 size={16} className="mr-2" />
                     Generate
                   </button>
+                </div>
+              </div>
+
+              {/* Font Customization Section */}
+              <div className="mb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                  <Type size={16} className="mr-2" />
+                  Font Customization
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  {/* Font Size */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Font Size
+                    </label>
+                    <div className="flex items-center">
+                      <input
+                        type="range"
+                        min="12"
+                        max="24"
+                        value={fontSize}
+                        onChange={(e) => setFontSize(parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                      />
+                      <span className="ml-2 text-gray-700 dark:text-gray-300 w-8 text-center">{fontSize}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Font Weight */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Font Weight
+                    </label>
+                    <select
+                      value={fontWeight}
+                      onChange={(e) => setFontWeight(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    >
+                      {fontWeightOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Font Color */}
+                  <div>
+                    <label className=" text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                      <Palette size={16} className="mr-1" /> Font Color
+                    </label>
+                    <div className="flex items-center">
+                      <input
+                        type="color"
+                        value={fontColor}
+                        onChange={(e) => setFontColor(e.target.value)}
+                        className="h-9 w-9 border border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={fontColor}
+                        onChange={(e) => setFontColor(e.target.value)}
+                        className="flex-1 ml-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Background Color */}
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                      <Palette size={16} className="mr-1" /> Background
+                    </label>
+                    <div className="flex items-center">
+                      <input
+                        type="color"
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        className="h-9 w-9 border border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        className="flex-1 ml-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -611,19 +719,25 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                 <p className="text-gray-500 dark:text-gray-500 max-w-md">
                   Create a design in the editor tab and click "Print" to generate product mockups
                 </p>
-                <button 
-                  onClick={() => setActiveTab('editor')}
-                  className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
-                >
-                  Go to Editor
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+                <button
+             
+                onClick={() => setActiveTab('editor')}
+                className="mt-4 inline-flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
+              >
+                Go to Editor
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="mt-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+        <p>© {new Date().getFullYear()} 8-Bit Pixel Graphics Generator. All rights reserved.</p>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default TextToGraphics;
