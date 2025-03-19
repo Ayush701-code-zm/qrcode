@@ -1,148 +1,70 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useCallback } from 'react'
-import domtoimage from 'dom-to-image'
-import download from 'downloadjs'
-
-
-
-
-import axios from 'axios'
-import { generateFileName } from '../../components/utils/helpers'
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import domtoimage from 'dom-to-image';
+import download from 'downloadjs';
+import axios from 'axios';
+import { generateFileName } from '../../components/utils/helpers';
 import {
   lettersPerRowMapCenter,
-
   lettersPerRowMapCenter_withQr,
   lettersPerRowMapLeft,
   lettersPerRowMapLeft_withQr,
-} from './help'
-import Loading from '../../components/commons/loading'
-import bwipjs from 'bwip-js'
+} from './help';
+import Loading from '../../components/commons/loading';
+import bwipjs from 'bwip-js';
+import { Download, Image as ImageIcon, Cog, Printer, Wand2, Layout, Code } from 'lucide-react';
 
-//font load glitch
-// block space removal
-// input with space and input without space adjustments
-
-const TextToGraphics = ({ config, text, setText, textInput, setTextInput }) => {
-  let defaultBoxSize = 60
-  const [printifyStatus, setPrintifyStatus] = useState(false) // Default text
-  const [spacingBuffer, setSpacingBuffer] = useState(5) // Default text
-  const [mockupUrl, setMockupUrl] = useState([])
-  const [errorMsg, setErrorMsg] = useState('')
-  const qrRef = useRef()
-  const textRef = useRef()
-  const [url, setUrl] = useState('')
-  const [aztecBarcode, setAztecBarcode] = useState('')
-  const [boxSize, setBoxSize] = useState(defaultBoxSize) // Default square size
-  const [qrSize, setQrSize] = useState(defaultBoxSize) // Default square size
- 
-
-  const [fontUrl, setFontUrl] = useState('')
-  const [loader, setLoader] = useState(false)
-  const [loderMsg, setLoderMsg] = useState('')
-
+const TextToGraphics = ({ config, text, setText, textInput, setTextInput, navigate }) => {
+  let defaultBoxSize = 60;
+  const [printifyStatus, setPrintifyStatus] = useState(false);
+  const [spacingBuffer, setSpacingBuffer] = useState(5);
+  const [mockupUrl, setMockupUrl] = useState([]);
+  const [errorMsg, setErrorMsg] = useState('');
+  const qrRef = useRef();
+  const textRef = useRef();
+  const [url, setUrl] = useState('');
+  const [aztecBarcode, setAztecBarcode] = useState('');
+  const [boxSize, setBoxSize] = useState(defaultBoxSize);
+  const [qrSize, setQrSize] = useState(defaultBoxSize);
+  const [fontUrl, setFontUrl] = useState('');
+  const [loader, setLoader] = useState(false);
+  const [loderMsg, setLoderMsg] = useState('');
+  const [activeTab, setActiveTab] = useState('editor');
+  
+  // Download function for PNG
   const downloadPng = async () => {
     let graphic = document.getElementById('graphic-parent')
     if (graphic) {
-      const originalPadding = graphic.style.padding
-      const originalMargin = graphic.style.margin
-      const originalOverflow = graphic.style.overflow
-
       setSpacingBuffer(5)
 
       setTimeout(() => {
-        // Calculate scale to achieve 2500px resolution
-        const maxDimension = Math.max(graphic.clientWidth, graphic.clientHeight)
-        const scale = 2500 / maxDimension
-
-        const computedStyle = window.getComputedStyle(graphic)
-        const padding = parseInt(computedStyle.padding, 10) || 0
-
-        graphic.style.padding = '0px'
-        graphic.style.margin = '0px'
-        graphic.style.overflow = 'visible'
-
-        domtoimage
-          .toPng(graphic, {
-            quality: 100,
-            width: (graphic.clientWidth + padding * 2) * scale,
-            height: (graphic.clientHeight + padding * 2) * scale,
-            style: {
-              transform: `scale(${scale})`,
-              transformOrigin: 'center center',
-              backgroundColor: 'transparent',
-            },
-          })
+        domtoimage.toPng(graphic, { quality: 0.3 })
           .then((dataUrl) => {
-            console.log('Generated PNG:', dataUrl)
             download(dataUrl, `${generateFileName(text)}.png`)
-
-            graphic.style.padding = originalPadding
-            graphic.style.margin = originalMargin
-            graphic.style.overflow = originalOverflow
             setSpacingBuffer(5)
           })
           .catch((err) => {
             console.error('Oops, something went wrong!', err)
-            console.error('Graphic element:', graphic)
-
-            graphic.style.padding = originalPadding
-            graphic.style.margin = originalMargin
-            graphic.style.overflow = originalOverflow
-            setSpacingBuffer(5)
           })
       }, 1000)
     }
   }
 
-  const downloadSvg = async () => {
+  // Function to handle SVG download
+  const downloadSvg = () => {
     let graphic = document.getElementById('graphic-parent')
     if (graphic) {
-      const originalPadding = graphic.style.padding
-      const originalMargin = graphic.style.margin
-      const originalOverflow = graphic.style.overflow
-
       setSpacingBuffer(5)
 
       setTimeout(() => {
-        // Calculate scale to achieve 1000px resolution
-        const maxDimension = Math.max(graphic.clientWidth, graphic.clientHeight)
-        const scale = 1000 / maxDimension
-
-        const computedStyle = window.getComputedStyle(graphic)
-        const padding = parseInt(computedStyle.padding, 10) || 0
-
-        graphic.style.padding = '0px'
-        graphic.style.margin = '0px'
-        graphic.style.overflow = 'visible'
-
-        domtoimage
-          .toSvg(graphic, {
-            width: (graphic.clientWidth + padding * 2) * scale,
-            height: (graphic.clientHeight + padding * 2) * scale,
-            style: {
-              transform: `scale(${scale})`,
-              transformOrigin: 'center center',
-              backgroundColor: 'transparent',
-            },
-          })
+        domtoimage.toSvg(graphic)
           .then((dataUrl) => {
-            console.log('Generated SVG:', dataUrl)
             download(dataUrl, `${generateFileName(text)}.svg`)
-
-            graphic.style.padding = originalPadding
-            graphic.style.margin = originalMargin
-            graphic.style.overflow = originalOverflow
             setSpacingBuffer(5)
           })
           .catch((err) => {
             console.error('Oops, something went wrong!', err)
-            console.error('Graphic element:', graphic)
-
-            graphic.style.padding = originalPadding
-            graphic.style.margin = originalMargin
-            graphic.style.overflow = originalOverflow
-            setSpacingBuffer(5)
           })
       }, 1000)
     }
@@ -160,14 +82,12 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput }) => {
       setSpacingBuffer(2)
 
       setTimeout(() => {
-        domtoimage
-          .toPng(graphic, { quality: 0.3 })
+        domtoimage.toPng(graphic, { quality: 0.3 })
           .then(async (dataUrl) => {
             setSpacingBuffer(5)
             // let data_ = dataUrl.replace("data:image/png;base64,", "");
             console.log(dataUrl)
-            let body
-            body = {
+            let body = {
               file_name: `${generateFileName(text)}.png`,
               contents: dataUrl,
             }
@@ -269,292 +189,441 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput }) => {
     }
   }, [url])
 
+  // Fetch font
   useEffect(() => {
-    // Function to get the last modified time or create a version
     const fetchFontVersion = async () => {
       try {
-        // Use Axios to send a HEAD request to get the font metadata
-        // const response = await axios.head(
-        //   "https://peflgfeieqtklcpkhszz.supabase.co/storage/v1/object/public/fonts/user-font.ttf"
-        // );
-
-        // Get the 'Last-Modified' header from the response
-        // const lastModified = response.headers["last-modified"];
-        const version = Math.floor(Date.now() / 1000) // Convert to timestamp
-
-        // Append the version as a query parameter to the font URL
-        const fontUrlWithVersion = `https://peflgfeieqtklcpkhszz.supabase.co/storage/v1/object/public/fonts/user-font.ttf?v=${version}`
-        setFontUrl(fontUrlWithVersion)
+        const version = Math.floor(Date.now() / 1000);
+        const fontUrlWithVersion = `https://peflgfeieqtklcpkhszz.supabase.co/storage/v1/object/public/fonts/user-font.ttf?v=${version}`;
+        setFontUrl(fontUrlWithVersion);
       } catch (error) {
-        console.error('Error fetching font metadata:', error)
+        console.error('Error fetching font metadata:', error);
       }
-    }
+    };
 
-    fetchFontVersion()
-  }, [])
+    fetchFontVersion();
+  }, []);
 
-  // Dynamically inject the font-face CSS when the font URL is ready
+  // Apply font
   useEffect(() => {
     if (fontUrl) {
-      const styleSheet = document.createElement('style')
+      const styleSheet = document.createElement('style');
       styleSheet.textContent = `
         @font-face {
-          font-family: 'CustomFont';
+          font-family: 'Megafont';
           src: url('${fontUrl}') format('truetype');
-          font-weight: normal;
+          font-weight: bold;
           font-style: normal;
           font-display: fallback;
         }
-      `
-      document.head.appendChild(styleSheet)
+      `;
+      document.head.appendChild(styleSheet);
       if (qrRef.current) {
-        qrRef.current.style.fontFamily = 'CustomFont'
+        qrRef.current.style.fontFamily = 'Megafont';
       }
     }
-  }, [fontUrl])
+  }, [fontUrl]);
 
-  // Calculate the box size dynamically based on text length
+  // Calculate box size
   useEffect(() => {
-    if (!textRef.current) return
+    if (!textRef.current) return;
 
-    // const textLength = text.length;
-    let textWidth = textRef.current.clientWidth
-    let textHeigh = textRef.current.clientHeight
-    // const newSize = Math.max(120, textLength * 30); // Adjust size scaling factor
+    let textWidth = textRef.current.clientWidth;
+    let textHeight = textRef.current.clientHeight;
+    
     if (config?.format === 'center') {
-      const newSize = textWidth + textHeigh + 18 + spacingBuffer // Adjust size scaling factor
+      const newSize = textWidth + textHeight + 18 + spacingBuffer;
       if (newSize > defaultBoxSize) {
-        setBoxSize(newSize)
-        setQrSize(newSize - (textHeigh + spacingBuffer) * 2)
+        setBoxSize(newSize);
+        setQrSize(newSize - (textHeight + spacingBuffer) * 2);
       }
     } else {
-      const newSize = textWidth + textHeigh + spacingBuffer // Adjust size scaling factor
+      const newSize = textWidth + textHeight + spacingBuffer;
       if (newSize > defaultBoxSize) {
-        setBoxSize(newSize)
-        setQrSize(newSize - (textHeigh + spacingBuffer) * 2)
+        setBoxSize(newSize);
+        setQrSize(newSize - (textHeight + spacingBuffer) * 2);
       }
     }
-  }, [text, spacingBuffer, config?.format, defaultBoxSize])
+  }, [text, spacingBuffer, config?.format, defaultBoxSize]);
+
+  // Custom styles from CSS file
+  const customStyles = {
+    qrBox: {
+      position: 'relative',
+      color: 'black',
+      backgroundColor: 'white',
+      textAlign: 'left',
+      transform: 'rotate(45deg)',
+      fontFamily: 'Megafont',
+      lineHeight: '0.76',
+      fontWeight: 'bold',
+    },
+    qrBoxCentered: {
+      position: 'relative',
+      backgroundColor: 'white',
+      transform: 'rotate(45deg)',
+      fontFamily: 'Megafont',
+      lineHeight: '0.76',
+    },
+    textTop: {
+      position: 'absolute',
+      top: '0px',
+      right: '4px',
+      rotate: '180deg',
+      whiteSpace: 'break-spaces',
+      wordWrap: 'break-word',
+    },
+    textBottom: {
+      position: 'absolute',
+      bottom: '0px',
+      left: '3px',
+      whiteSpace: 'break-spaces',
+      wordWrap: 'break-word',
+    },
+    textLeft: {
+      position: 'absolute',
+      top: '3px',
+      left: '0px',
+      writingMode: 'vertical-rl',
+      wordWrap: 'break-word',
+      whiteSpace: 'break-spaces',
+    },
+    textRight: {
+      position: 'absolute',
+      writingMode: 'vertical-rl',
+      transform: 'rotate(180deg)',
+      textAlign: 'left',
+      bottom: '3px',
+      right: '1px',
+      whiteSpace: 'break-spaces',
+      wordWrap: 'break-word',
+    },
+    textCentered: {
+      position: 'absolute',
+      inset: '0',
+      display: 'flex',
+      justifyContent: 'center',
+      color: 'black',
+      wordWrap: 'break-word',
+      whiteSpace: 'break-spaces',
+    },
+    textCenteredP: {
+      margin: '0',
+      marginTop: 'auto',
+    },
+    flexGraphics: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '100px',
+      opacity: '1',
+      padding: '55px',
+    },
+    qrImage: {
+      width: '100%',
+      height: '100%',
+    },
+    qrTextCenter: {
+      position: 'absolute',
+      margin: 'auto',
+      inset: '0',
+      color: 'black',
+    },
+  };
 
   return (
-    <>
-      <div className="qr-container">
-        <h1>8-Bit Pixel Graphic</h1>
-        <div className="qr-input-container">
-          <textarea
-            rows="1"
-            // maxLength={36}
-            value={textInput}
-            onChange={(e) => onChangeTextHandler(e.target.value, aztecBarcode)}
-            placeholder="Enter text"
-            className="qr-input"
-          ></textarea>
-          <span className="qr-textLength">{text.replace(/\n/g, '')?.length + ' / ' + 36}</span>
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            8-Bit Pixel Graphics Generator
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Create custom pixel designs with optional QR codes for your projects
+          </p>
         </div>
-        <div className="url-container">
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Enter URL"
-            className="url-field"
-          />
-          <button
-            onClick={() => {
-              generateAztecBarcode()
-              onChangeTextHandler(textInput, url)
-            }}
-            className="url-button"
-          >
-            Generate
-          </button>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <button
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === 'editor'
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              }`}
+              onClick={() => setActiveTab('editor')}
+            >
+              <Layout className="inline-block w-4 h-4 mr-2" />
+              Editor
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === 'results'
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              }`}
+              onClick={() => setActiveTab('results')}
+            >
+              <Code className="inline-block w-4 h-4 mr-2" />
+              Print Results
+            </button>
+          </div>
         </div>
-        <br />
-        {text.length > 0 && (
-          <div className="formatingDiv">
-            {/* format-center */}
-            <div className={`flex-graphics  `} id="graphic-parent">
-              {config.format === 'center' ? (
-                <div
-                  ref={qrRef}
-                  className={`qr-box-centered`}
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    height: `${boxSize}px`, // Dynamically set height based on text length
-                    width: `${boxSize}px`, // Dynamically set width based on text length
-                    lineHeight: '1ch',
-                    // fontFamily: "CustomFont",
-                  }}
-                >
-                  {/* Left text */}
-                  <div className="qr-text-bottom-right-centered left" style={{}} id="triangle-left">
-                    <p>
-                      {/* {getFormattedText()} */}
-                      {text}
-                    </p>
-                  </div>
 
-                  <div className="qr-text-bottom-right-centered top" style={{}} id="triangle-top">
-                    <p>
-                      {/* {getFormattedText()} */}
-                      {text}
-                    </p>
-                  </div>
-                  <div
-                    className="qr-text-bottom-right-centered right"
-                    style={{}}
-                    id="triangle-right"
-                  >
-                    <p ref={textRef}>
-                      {/* {getFormattedText()} */}
-                      {text}
-                    </p>
-                  </div>
-                  <div
-                    className="qr-text-bottom-right-centered bottom"
-                    style={{}}
-                    id="triangle-bottom"
-                  >
-                    <p>
-                      {/* {getFormattedText()} */}
-                      {text}
-                    </p>
-                  </div>
-
-                  {/* Center text */}
-                  <div
-                    className="qr-text-center"
-                    style={{ width: `${qrSize}px`, height: `${qrSize}px` }}
-                  >
-                    {aztecBarcode && (
-                      <img
-                        src={aztecBarcode}
-                        alt="Generated QR Code"
-                        // width={300}
-                        // height={300}
-                        className="qr-image"
-                      />
-                    )}
+        {/* Main Content - Editor View */}
+        {activeTab === 'editor' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column - Controls */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Design Controls</h2>
+              
+              {/* Text Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Enter Your Text
+                </label>
+                <div className="relative">
+                  <textarea
+                    rows="3"
+                    value={textInput}
+                    onChange={(e) => onChangeTextHandler(e.target.value, aztecBarcode)}
+                    placeholder="Enter your text here..."
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
+                  />
+                  <div className="absolute right-3 bottom-3 text-sm text-gray-500 dark:text-gray-400">
+                    {text.replace(/\n/g, '')?.length} / 36
                   </div>
                 </div>
-              ) : (
-                <div
-                  ref={qrRef}
-                  className="qr-box"
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    height: `${boxSize}px`, // Dynamically set height based on text length
-                    width: `${boxSize}px`, // Dynamically set width based on text length
-                    // fontFamily: "CustomFont",
-                  }}
-                >
-                  {/* Top text */}
-                  <div className="qr-text-top" style={{}}>
-                    {text}
-                  </div>
+              </div>
 
-                  {/* Bottom text */}
-                  <div className="qr-text-bottom" style={{}} ref={textRef}>
-                    {text}
-                  </div>
-
-                  {/* Left text (rotated) */}
-                  <div
-                    className="qr-text-left"
-                    style={{
-                      // fontSize: `${boxSize / fontFactor}px`, // Dynamically adjust font size
-                      bottom: textRef?.current?.clientHeight + (spacingBuffer - 10),
+              {/* URL Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  QR Code URL (Optional)
+                </label>
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://example.com"
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
+                  />
+                  <button
+                    onClick={() => {
+                      generateAztecBarcode();
+                      onChangeTextHandler(textInput, true);
                     }}
+                    className="inline-flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
                   >
-                    {text}
-                  </div>
-
-                  {/* Right text (rotated) */}
-                  <div className="qr-text-right" style={{}}>
-                    {text}
-                  </div>
-
-                  {/* Center text */}
-                  <div
-                    className="qr-text-center"
-                    style={{ width: `${qrSize}px`, height: `${qrSize}px` }}
-                  >
-                    {aztecBarcode && (
-                      <img
-                        src={aztecBarcode}
-                        alt="Generated QR Code"
-                        // width={300}
-                        // height={300}
-                        className="qr-image"
-                      />
-                    )}
-                  </div>
+                    <Wand2 size={16} className="mr-2" />
+                    Generate
+                  </button>
                 </div>
-              )}
-            </div>
-            <br />
-            <div className="qr-download-buttons">
-              <button onClick={downloadPng} className="qr-download-button">
-                Download as PNG
-              </button>
-              <button onClick={downloadSvg}>Download as SVG</button>
-              <button onClick={sendToPrintify}>Printful</button>
-              <button
-                onClick={() => {
-                  navigate('/config')
-                }}
-              >
-                Config
-              </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <button
+                  onClick={downloadPng}
+                  disabled={!text.length}
+                  className={`flex items-center justify-center py-2 px-4 ${
+                    text.length
+                      ? 'bg-blue-500 hover:bg-blue-600'
+                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                  } text-white font-medium rounded-lg transition-colors duration-200`}
+                >
+                  <Download size={16} className="mr-2" />
+                  PNG
+                </button>
+                <button
+                  onClick={downloadSvg}
+                  disabled={!text.length}
+                  className={`flex items-center justify-center py-2 px-4 ${
+                    text.length
+                      ? 'bg-purple-500 hover:bg-purple-600'
+                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                  } text-white font-medium rounded-lg transition-colors duration-200`}
+                >
+                  <ImageIcon size={16} className="mr-2" />
+                  SVG
+                </button>
+                <button
+                  onClick={sendToPrintify}
+                  disabled={!text.length}
+                  className={`flex items-center justify-center py-2 px-4 ${
+                    text.length
+                      ? 'bg-green-500 hover:bg-green-600'
+                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                  } text-white font-medium rounded-lg transition-colors duration-200`}
+                >
+                  <Printer size={16} className="mr-2" />
+                  Print
+                </button>
+                <button
+                  onClick={() => navigate('/config')}
+                  className="flex items-center justify-center py-2 px-4 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors duration-200"
+                >
+                  <Cog size={16} className="mr-2" />
+                  Config
+                </button>
+              </div>
+
               {printifyStatus && (
-                <div className="status-message">{'Graphics uploaded to Printful Successfully'}</div>
+                <div className="mt-4 py-2 px-4 bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 rounded-lg text-sm">
+                  Graphics uploaded to Printful successfully!
+                </div>
+              )}
+            </div>
+
+            {/* Right Column - Preview */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 flex flex-col items-center justify-center">
+              <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-6">Preview</h2>
+              
+              {text.length > 0 ? (
+                <div style={customStyles.flexGraphics} id="graphic-parent">
+                  {config.format === 'center' ? (
+                    <div
+                      ref={qrRef}
+                      style={{
+                        ...customStyles.qrBoxCentered,
+                        height: `${boxSize}px`,
+                        width: `${boxSize}px`,
+                      }}
+                    >
+                      <div style={{...customStyles.textCentered, transform: 'rotate(90deg)'}} className="left">
+                        <p style={customStyles.textCenteredP}>{text}</p>
+                      </div>
+                      <div style={{...customStyles.textCentered, transform: 'rotate(180deg)'}} className="top">
+                        <p style={customStyles.textCenteredP}>{text}</p>
+                      </div>
+                      <div style={{...customStyles.textCentered, transform: 'rotate(270deg)'}} className="right">
+                        <p style={customStyles.textCenteredP} ref={textRef}>{text}</p>
+                      </div>
+                      <div style={customStyles.textCentered} className="bottom">
+                        <p style={customStyles.textCenteredP}>{text}</p>
+                      </div>
+                      <div
+                        style={{
+                          ...customStyles.qrTextCenter,
+                          width: `${qrSize}px`,
+                          height: `${qrSize}px`
+                        }}
+                      >
+                        {aztecBarcode && (
+                          <img
+                            src={aztecBarcode}
+                            alt="Generated QR Code"
+                            style={customStyles.qrImage}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      ref={qrRef}
+                      style={{
+                        ...customStyles.qrBox,
+                        height: `${boxSize}px`,
+                        width: `${boxSize}px`,
+                      }}
+                    >
+                      <div style={customStyles.textTop}>{text}</div>
+                      <div style={customStyles.textBottom} ref={textRef}>{text}</div>
+                      <div
+                        style={{
+                          ...customStyles.textLeft,
+                          bottom: (textRef?.current?.clientHeight || 0) + (spacingBuffer - 10)
+                        }}
+                      >
+                        {text}
+                      </div>
+                      <div style={customStyles.textRight}>{text}</div>
+                      <div
+                        style={{
+                          ...customStyles.qrTextCenter,
+                          width: `${qrSize}px`,
+                          height: `${qrSize}px`
+                        }}
+                      >
+                        {aztecBarcode && (
+                          <img
+                            src={aztecBarcode}
+                            alt="Generated QR Code"
+                            style={customStyles.qrImage}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64 w-64 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                  <p className="text-gray-500 dark:text-gray-400 text-center">
+                    Enter text to see preview
+                  </p>
+                </div>
               )}
             </div>
           </div>
         )}
-        <div className="horizontolLine"></div>
-        <div>Print</div>
-        {loader ? (
-          <>
-            <div style={{ color: 'red', fontWeight: 'normal', fontSize: '15px' }}>{loderMsg}</div>
-            <Loading />
-          </>
-        ) : (
-          <></>
-        )}
-        {mockupUrl?.length ? (
-          <div className="images-grid">
-            {mockupUrl?.map((url, i) => {
-              return url.mockupUrl ? (
-                <img
-                  key={i}
-                  style={{
-                    width: '100%',
-                    maxWidth: '400px',
-                    height: 'auto',
-                    borderRadius: '8px',
-                    margin: '5px',
-                  }}
-                  src={url.mockupUrl}
-                  alt="Generated QR Code"
-                />
-              ) : (
-                <div className="error-container">
-                 
-                  <span className="error-text">Unable to load image...</span>
+
+        {/* Print Results View */}
+        {activeTab === 'results' && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-6">Print Results</h2>
+            
+            {loader ? (
+              <div className="flex flex-col items-center justify-center h-64">
+                <p className="text-blue-600 dark:text-blue-400 mb-4">{loderMsg}</p>
+                <Loading />
+              </div>
+            ) : mockupUrl?.length ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockupUrl?.map((url, i) => {
+                  return url.mockupUrl ? (
+                    <div key={i} className="overflow-hidden rounded-lg shadow-md">
+                      <img
+                        className="w-full h-auto object-cover"
+                        src={url.mockupUrl}
+                        alt="Generated Product Mockup"
+                      />
+                    </div>
+                  ) : (
+                    <div key={i} className="flex items-center justify-center h-40 bg-red-50 dark:bg-red-900 rounded-lg">
+                      <span className="text-red-600 dark:text-red-300">Unable to load image</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : errorMsg ? (
+              <div className="flex items-center justify-center h-40 bg-red-50 dark:bg-red-900 rounded-lg">
+                <span className="text-red-600 dark:text-red-300">{errorMsg}</span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 text-center">
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-full p-4 mb-4">
+                  <Printer size={32} className="text-gray-400 dark:text-gray-500" />
                 </div>
-              )
-            })}
+                <h3 className="text-gray-600 dark:text-gray-400 font-medium mb-2">No Print Results Yet</h3>
+                <p className="text-gray-500 dark:text-gray-500 max-w-md">
+                  Create a design in the editor tab and click "Print" to generate product mockups
+                </p>
+                <button 
+                  onClick={() => setActiveTab('editor')}
+                  className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
+                >
+                  Go to Editor
+                </button>
+              </div>
+            )}
           </div>
-        ) : (
-          <div style={{ color: 'red', fontWeight: 'normal', fontSize: '15px' }}>{errorMsg}</div>
         )}
       </div>
+    </div>
+  );
+};
 
-    </>
-  )
-}
-
-export default TextToGraphics
+export default TextToGraphics;
