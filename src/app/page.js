@@ -1,6 +1,7 @@
 import NewsletterSection from "../app/components/NewsLetters";
 import VideoSection from "../app/components/VedioSection";
 import ContactFormSection from "./components/ContactForm";
+import QRCustomizationGame from "./components/CustomGame";
 import FAQSection from "./components/Faq";
 import FooterSection from "./components/FooterSection";
 import HeroSection from "./components/HeroSection";
@@ -21,6 +22,7 @@ export default function Home() {
         <section id="contact">
           <ContactFormSection />
         </section>
+        <QRCustomizationGame />
         <section >
           <FAQSection />
           <TestimonialsPage />
