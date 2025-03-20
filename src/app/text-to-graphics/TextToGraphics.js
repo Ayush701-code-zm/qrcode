@@ -17,7 +17,7 @@ import { Download, Image as ImageIcon, Cog, Printer, Wand2, Layout, Code, Shoppi
 
 
 const TextToGraphics = ({ config, text, setText, textInput, setTextInput, navigate }) => {
-  let defaultBoxSize = 60;
+  let defaultBoxSize = 35;
   const [printifyStatus, setPrintifyStatus] = useState(false);
   const [spacingBuffer, setSpacingBuffer] = useState(5);
   const [mockupUrl, setMockupUrl] = useState([]);
@@ -224,8 +224,6 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
   // Apply font
   useEffect(() => {
     if (!fontUrl) {
-      // If no external font URL is available, use the local megafont from public folder
-    
       const styleSheet = document.createElement('style');
       styleSheet.textContent = `
         @font-face {
@@ -241,7 +239,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
         qrRef.current.style.fontFamily = 'Megafont';
       }
     } else {
-      // Original code for when fontUrl is present
+  
       const styleSheet = document.createElement('style');
       styleSheet.textContent = `
         @font-face {
@@ -264,26 +262,54 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
   useEffect(() => {
     if (!textRef.current) return
 
-    // const textLength = text.length;
-    let textWidth = textRef.current.clientWidth
-    let textHeigh = textRef.current.clientHeight
-    console.log(textWidth  ,   textHeigh  , "text releted thing")
+    // Get exact dimensions of the text content
+    let textWidth = textRef.current.clientWidth;
+    let textHeight = textRef.current.clientHeight;
+    console.log(textWidth, textHeight, "text dimensions");
+    
+    // Calculate appropriate size based on text content
+    let newSize;
+    
     if (config?.format === 'center') {
-      const newSize = textWidth + textHeigh + 18 + spacingBuffer 
-      if (newSize > defaultBoxSize) {
-        setBoxSize(newSize)
-        setQrSize(newSize - (textHeigh + spacingBuffer) * 2)
-        console.log(newSize , "new size")
+      // Calculate size for centered format
+      const lineCount = (text.match(/\n/g) || []).length + 1;
+      
+      if (text.length <= 1) {
+        // Special case for single character
+        newSize = defaultBoxSize;
+      } else if (lineCount === 1) {
+        // Single line of text
+        newSize = Math.max(defaultBoxSize, textWidth + 20 + spacingBuffer);
+      } else {
+        // Multiple lines
+        newSize = Math.max(defaultBoxSize, textWidth + textHeight + 18 + spacingBuffer);
       }
+      
+      // Set both box and QR size
+      setBoxSize(newSize);
+      setQrSize(newSize - (textHeight + spacingBuffer) * 2);
     } else {
-      const newSize = textWidth + textHeigh + spacingBuffer 
-      if (newSize > defaultBoxSize) {
-        setBoxSize(newSize)
-        setQrSize(newSize - (textHeigh + spacingBuffer) * 2)
-        console.log(newSize , "new size 1 ")
+      // Calculate size for left format
+      const lineCount = (text.match(/\n/g) || []).length + 1;
+      
+      if (text.length <= 1) {
+        // Special case for single character
+        newSize = defaultBoxSize;
+      } else if (lineCount === 1) {
+        // Single line of text
+        newSize = Math.max(defaultBoxSize, textWidth + 15 + spacingBuffer);
+      } else {
+        // Multiple lines
+        newSize = Math.max(defaultBoxSize, textWidth + textHeight + spacingBuffer);
       }
+      
+      // Set both box and QR size
+      setBoxSize(newSize);
+      setQrSize(newSize - (textHeight + spacingBuffer) * 2);
     }
-  }, [text, spacingBuffer, config?.format, defaultBoxSize])
+    
+    console.log(`New size: ${newSize}, Line count: ${(text.match(/\n/g) || []).length + 1}`);
+  }, [text, spacingBuffer, config?.format, defaultBoxSize]);
 
   // Add product to cart
   const addToCart = (productId) => {
@@ -358,6 +384,8 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       rotate: '180deg',
       whiteSpace: 'break-spaces',
       wordWrap: 'break-word',
+      maxWidth: '100%',
+      padding: '2px',
     },
     textBottom: {
       position: 'absolute',
@@ -365,6 +393,8 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       left: '3px',
       whiteSpace: 'break-spaces',
       wordWrap: 'break-word',
+      maxWidth: '100%',
+      padding: '2px',
     },
     textLeft: {
       position: 'absolute',
@@ -373,6 +403,8 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       writingMode: 'vertical-rl',
       wordWrap: 'break-word',
       whiteSpace: 'break-spaces',
+      maxHeight: '100%',
+      padding: '2px',
     },
     textRight: {
       position: 'absolute',
@@ -383,6 +415,8 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       right: '1px',
       whiteSpace: 'break-spaces',
       wordWrap: 'break-word',
+      maxHeight: '100%',
+      padding: '2px',
     },
     textCentered: {
       position: 'absolute',
