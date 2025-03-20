@@ -13,7 +13,8 @@ import {
 } from './help';
 import Loading from '../../components/commons/loading';
 import bwipjs from 'bwip-js';
-import { Download, Image as ImageIcon, Cog, Printer, Wand2, Layout, Code, ShoppingCart, Check, ChevronDown, Info } from 'lucide-react';
+import { Download, Image as ImageIcon, Cog, Printer, Wand2, Layout, Code, ShoppingCart, Check,  Info } from 'lucide-react';
+
 
 const TextToGraphics = ({ config, text, setText, textInput, setTextInput, navigate }) => {
   let defaultBoxSize = 60;
@@ -173,7 +174,8 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
           spacingArr?.includes(index + 1) ? '\n' : ''
         }`
       })
-      // console.log('final:', lettersWithNewLineBreak)
+      console.log('final:', lettersWithNewLineBreak)
+      console.log(boxSize , "Box size")
       setText(lettersWithNewLineBreak)
     },
     [config?.format, setText, setTextInput],
@@ -209,9 +211,10 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
       try {
         const version = Math.floor(Date.now() / 1000);
         const fontUrlWithVersion = `https://peflgfeieqtklcpkhszz.supabase.co/storage/v1/object/public/fonts/user-font.ttf?v=${version}`;
+
         setFontUrl(fontUrlWithVersion);
       } catch (error) {
-        console.error('Error fetching font metadata:', error);
+        console.log('Error fetching font metadata:', error);
       }
     };
 
@@ -222,12 +225,12 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
   useEffect(() => {
     if (!fontUrl) {
       // If no external font URL is available, use the local megafont from public folder
-      const localFontUrl = '/Megafont.ttf';
+    
       const styleSheet = document.createElement('style');
       styleSheet.textContent = `
         @font-face {
           font-family: 'Megafont';
-          src: url('${localFontUrl}') format('truetype');
+          src: url('${fontUrl}') format('truetype');
           font-weight: bold;
           font-style: normal;
           font-display: fallback;
@@ -256,27 +259,31 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
     }
   }, [fontUrl]);
 
-  // Calculate box size
-  useEffect(() => {
-    if (!textRef.current) return;
 
-    let textWidth = textRef.current.clientWidth;
-    let textHeight = textRef.current.clientHeight;
-    
+
+  useEffect(() => {
+    if (!textRef.current) return
+
+    // const textLength = text.length;
+    let textWidth = textRef.current.clientWidth
+    let textHeigh = textRef.current.clientHeight
+    console.log(textWidth  ,   textHeigh  , "text releted thing")
     if (config?.format === 'center') {
-      const newSize = textWidth + textHeight + 18 + spacingBuffer;
+      const newSize = textWidth + textHeigh + 18 + spacingBuffer 
       if (newSize > defaultBoxSize) {
-        setBoxSize(newSize);
-        setQrSize(newSize - (textHeight + spacingBuffer) * 2);
+        setBoxSize(newSize)
+        setQrSize(newSize - (textHeigh + spacingBuffer) * 2)
+        console.log(newSize , "new size")
       }
     } else {
-      const newSize = textWidth + textHeight + spacingBuffer;
+      const newSize = textWidth + textHeigh + spacingBuffer 
       if (newSize > defaultBoxSize) {
-        setBoxSize(newSize);
-        setQrSize(newSize - (textHeight + spacingBuffer) * 2);
+        setBoxSize(newSize)
+        setQrSize(newSize - (textHeigh + spacingBuffer) * 2)
+        console.log(newSize , "new size 1 ")
       }
     }
-  }, [text, spacingBuffer, config?.format, defaultBoxSize]);
+  }, [text, spacingBuffer, config?.format, defaultBoxSize])
 
   // Add product to cart
   const addToCart = (productId) => {
@@ -324,7 +331,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
     }, 1000);
   };
 
-
+  
 
   const customStyles = {
     qrBox: {
@@ -489,7 +496,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Enter Your Text
                 </label>
-                <div className="relative">
+                <div className="relative ">
                   <textarea
                     rows="3"
                     value={textInput}
@@ -607,20 +614,23 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                 <div style={customStyles.flexGraphics} id="graphic-parent">
                   {config.format === 'center' ? (
                     <div
+                    className="font-custom"
                       ref={qrRef}
                       style={{
                         ...customStyles.qrBoxCentered,
                         height: `${boxSize}px`,
                         width: `${boxSize}px`,
+                       
                       }}
                     >
+                      
                       <div style={{...customStyles.textCentered, transform: 'rotate(90deg)'}} className="left">
                         <p style={customStyles.textCenteredP}>{text}</p>
                       </div>
                       <div style={{...customStyles.textCentered, transform: 'rotate(180deg)'}} className="top">
                         <p style={customStyles.textCenteredP}>{text}</p>
                       </div>
-                      <div style={{...customStyles.textCentered, transform: 'rotate(270deg)'}} className="right">
+                      <div style={{...customStyles.textCentered, transform: 'rotate(270deg)'}} className="right font-custom">
                         <p style={customStyles.textCenteredP} ref={textRef}>{text}</p>
                       </div>
                       <div style={customStyles.textCentered} className="bottom">
@@ -643,6 +653,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                       </div>
                     </div>
                   ) : (
+                  
                     <div
                       ref={qrRef}
                       style={{
@@ -651,6 +662,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                         width: `${boxSize}px`,
                       }}
                     >
+                      {console.log(`Height and Width set to ${boxSize}px`)}
                       <div style={customStyles.textTop}>{text}</div>
                       <div style={customStyles.textBottom} ref={textRef}>{text}</div>
                       <div

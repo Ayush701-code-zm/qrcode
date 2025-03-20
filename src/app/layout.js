@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 // Load local font but do NOT apply globally
 const myCustomFont = localFont({
   src: "../../public/fonts/Megafont.ttf",
-  variable: "--font-custom", // Define variable but don't apply it globally
+  variable: "--font-custom", 
   display: "swap",
 });
 
@@ -26,10 +26,10 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistMono.variable}`}
+      className={`${geistMono.variable}`} // Geist_Mono applied globally
     >
       <head />
-      <body className="font-geist-mono">
+      <body className={`${geistMono.variable}`}> {/* myCustomFont not applied globally */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
