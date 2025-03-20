@@ -118,13 +118,13 @@ function FAQSection() {
           animate="visible"
         >
           <motion.h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 cursor-pointer"
             variants={fadeDown}
           >
             Frequently Asked Questions
           </motion.h2>
           <motion.p
-            className="text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto"
+            className="text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto cursor-pointer"
             variants={fadeUp}
           >
             Everything you need to know about our QR code fashion products and
@@ -157,7 +157,7 @@ function FAQSection() {
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="flex justify-between items-center w-full py-4 px-2 text-left font-medium focus:outline-none"
+                className="flex justify-between items-center w-full py-4 px-2 text-left font-medium focus:outline-none cursor-pointer"
               >
                 <span className="text-lg font-semibold text-gray-900 dark:text-white">
                   {item.question}
@@ -169,7 +169,7 @@ function FAQSection() {
                       openIndex === index ? "#8b5cf6" : "#6366f1",
                   }}
                   transition={{ duration: 0.3 }}
-                  className="flex items-center justify-center w-6 h-6 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600"
+                  className="flex items-center justify-center w-6 h-6 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600 cursor-pointer"
                 >
                   {openIndex === index ? (
                     <Minus size={14} />
@@ -208,7 +208,7 @@ function FAQSection() {
           viewport={{ once: true }}
         >
           <motion.p
-            className="mb-6 text-gray-700 dark:text-gray-300"
+            className="mb-6 text-gray-700 dark:text-gray-300 cursor-pointer"
             variants={fadeIn}
           >
             Still have questions? We're here to help!
@@ -220,9 +220,9 @@ function FAQSection() {
               transition: { type: "spring", stiffness: 400, damping: 20 },
             }}
             whileTap={{ scale: 0.98 }}
-            className="inline-block"
+            className="inline-block cursor-pointer"
           >
-            <button className="px-8 py-3 flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 text-white rounded-md font-medium transition-all duration-300">
+            <button className="px-8 py-3 flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 text-white rounded-md font-medium transition-all duration-300 cursor-pointer">
               <span>Contact Support</span>
               <motion.div
                 animate={{

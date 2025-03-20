@@ -131,7 +131,7 @@ function AboutWithVideoSection() {
                             <span>Watch How It Works</span>
                           </div>
                         }
-                        className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 transition-all duration-300"
+                        className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 transition-all duration-300 cursor-pointer"
                       />
                     </motion.div>
                   </motion.div>
@@ -313,7 +313,7 @@ function AboutWithVideoSection() {
               </motion.h3>
 
               <motion.div
-                className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative"
+                className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative cursor-pointer"
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="visible"
@@ -361,7 +361,7 @@ function AboutWithVideoSection() {
               >
                 Our Core Values
               </motion.h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 cursor-pointer">
                 <motion.div
                   className="bg-white dark:bg-gray-800/60 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center relative overflow-hidden"
                   variants={cardVariants}

@@ -128,12 +128,12 @@ function Newsletter() {
                 >
                   <Button
                     text={
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-center gap-2 cursor-pointer">
                         <span>Subscribe Now</span>
                         <Send size={16} />
                       </div>
                     }
-                    className="w-full h-12 sm:h-[3.8125rem] flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 dark:hover:from-blue-500 dark:hover:to-purple-400 text-white shadow-lg transition-all duration-300"
+                    className="w-full h-12 sm:h-[3.8125rem] flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 dark:hover:from-blue-500 dark:hover:to-purple-400 text-white shadow-lg transition-all duration-300 cursor-pointer"
                   />
                 </motion.div>
               </motion.div>

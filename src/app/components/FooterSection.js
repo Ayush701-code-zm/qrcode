@@ -73,7 +73,7 @@ function FooterSection() {
               alt="Artofqr"
               width={200}
               height={200}
-              className="object-contain mb-4"
+              className="object-contain mb-4 cursor-pointer"
             />
             <p className="text-gray-700 dark:text-gray-300 mt-4 mb-6 max-w-md">
               Create scannable QR code fashion that connects your physical style
@@ -86,7 +86,7 @@ function FooterSection() {
                 <motion.a
                   key={index}
                   href="#"
-                  className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-500 hover:text-white transform transition-all duration-300 hover:scale-110"
+                  className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-500 hover:text-white transform transition-all duration-300 hover:scale-110 cursor-pointer"
                   variants={fadeIn}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -104,7 +104,7 @@ function FooterSection() {
               variants={fadeIn}
               className="col-span-1 mt-6 sm:mt-0"
             >
-              <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300">
+              <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 cursor-pointer">
                 {section.title}
               </h3>
               <ul className="space-y-2">
@@ -113,6 +113,7 @@ function FooterSection() {
                     key={linkIndex}
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    className="cursor-pointer"
                   >
                     <a
                       href="#"
@@ -135,7 +136,7 @@ function FooterSection() {
           variants={fadeIn}
         >
           <div className="max-w-md">
-            <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300">
+            <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 cursor-pointer">
               Subscribe to our newsletter
             </h3>
             <p className="text-gray-700 dark:text-gray-300">
@@ -146,9 +147,9 @@ function FooterSection() {
             <input
               type="email"
               placeholder="Your email address"
-              className="p-3 rounded-l-md border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 w-full md:w-64"
+              className="p-3 rounded-l-md border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 w-full md:w-64 cursor-pointer"
             />
-            <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 text-white px-4 py-2 rounded-r-md transition-all duration-300">
+            <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 text-white px-4 py-2 rounded-r-md transition-all duration-300 cursor-pointer">
               Subscribe
             </button>
           </div>
@@ -161,7 +162,7 @@ function FooterSection() {
           className="pt-6 pb-8 flex flex-col md:flex-row justify-between items-center gap-4"
           variants={fadeIn}
         >
-          <p className="text-gray-700 dark:text-gray-300 text-center md:text-left">
+          <p className="text-gray-700 dark:text-gray-300 text-center md:text-left cursor-pointer">
             © {new Date().getFullYear()} Artofqr. All rights reserved.
           </p>
 
@@ -171,7 +172,7 @@ function FooterSection() {
                 <motion.a
                   key={index}
                   href="#"
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300 text-sm"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300 text-sm cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                 >
                   {item}

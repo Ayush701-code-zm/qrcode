@@ -6,7 +6,7 @@ import Button from "@/components/ui/button";
 import bannerImage from "../../../public/images/freepik.jpg";
 import { ArrowRight, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
-import CustomFont from "../../components/CustomFont";
+
 
 const HeroSection = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -79,14 +79,14 @@ const HeroSection = () => {
             variants={fadeIn}
           >
             <motion.div className="relative">
-              <CustomFont>
+             
                 <motion.h1
                   className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
                   variants={fadeDown}
                 >
                   Your QR, Your Style
                 </motion.h1>
-              </CustomFont>
+            
 
               <motion.p
                 className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-6 max-w-lg mx-auto lg:mx-0"
@@ -111,8 +111,8 @@ const HeroSection = () => {
                 >
                   <Button
                     text={
-                      <div className="flex items-center justify-center gap-2">
-                        <Wand2 size={18} />
+                      <div className="flex items-center justify-center gap-2 cursor-pointer">
+                        <Wand2 size={18} className="cursor-pointer"  />
                         <span>Design Your QR</span>
                         <motion.div
                           animate={{
@@ -131,7 +131,7 @@ const HeroSection = () => {
                     }
                     width="w-full"
                     height="h-12"
-                    className="flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 transition-all duration-300"
+                    className="flex items-center justify-center gap-2 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 transition-all duration-300 cursor-pointer"
                   />
                 </motion.div>
               </motion.div>
@@ -140,7 +140,7 @@ const HeroSection = () => {
 
           {/* Right column - Image */}
           <motion.div
-            className="order-1 lg:order-2 flex justify-center"
+            className="order-1 lg:order-2 flex justify-center cursor-pointer"
             variants={fadeDown}
           >
             <motion.div

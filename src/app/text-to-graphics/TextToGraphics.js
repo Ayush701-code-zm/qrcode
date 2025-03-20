@@ -468,7 +468,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
         <div className="fixed top-4 right-4 z-10">
           <button 
             onClick={() => setActiveTab('cart')}
-            className="flex items-center justify-center px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition-colors duration-200"
+            className="flex items-center justify-center px-3 cursor-pointer py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition-colors duration-200"
           >
             <ShoppingCart size={18} />
             {cart.length > 0 && (
@@ -483,7 +483,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
         <div className="flex justify-center mb-6">
           <div className="inline-flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
             <button
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
                 activeTab === 'editor'
                   ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
@@ -505,10 +505,10 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
               Print Results
             </button>
             <button
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
                 activeTab === 'cart'
-                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm cursor-pointer'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 cursor-pointer'
               }`}
               onClick={() => setActiveTab('cart')}
             >
@@ -562,7 +562,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                       generateAztecBarcode();
                       onChangeTextHandler(textInput, true);
                     }}
-                    className="inline-flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
+                    className="inline-flex cursor-pointer items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
                   >
                     <Wand2 size={16} className="mr-2" />
                     Generate
@@ -575,10 +575,10 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                 <button
                   onClick={downloadPng}
                   disabled={!text.length}
-                  className={`flex items-center justify-center py-2 px-4 ${
+                  className={`flex items-center justify-center py-2 px-4 cursor-pointer ${
                     text.length
-                      ? 'bg-blue-500 hover:bg-blue-600'
-                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                      ? 'bg-blue-500 hover:bg-blue-600 cursor-pointer'
+                      : 'bg-gray-300 dark:bg-gray-700  cursor-pointer'
                   } text-white font-medium rounded-lg transition-colors duration-200`}
                 >
                   <Download size={16} className="mr-2" />
@@ -590,7 +590,7 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
                   className={`flex items-center justify-center py-2 px-4 ${
                     text.length
                       ? 'bg-purple-500 hover:bg-purple-600'
-                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed '
                   } text-white font-medium rounded-lg transition-colors duration-200`}
                 >
                   <ImageIcon size={16} className="mr-2" />
