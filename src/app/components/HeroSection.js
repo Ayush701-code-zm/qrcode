@@ -6,6 +6,7 @@ import Button from "@/components/ui/button";
 import bannerImage from "../../../public/images/freepik.jpg";
 import { ArrowRight, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
+import CustomFont from "../../components/CustomFont";
 
 const HeroSection = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -78,12 +79,14 @@ const HeroSection = () => {
             variants={fadeIn}
           >
             <motion.div className="relative">
-              <motion.h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
-                variants={fadeDown}
-              >
-                Your QR, Your Style
-              </motion.h1>
+              <CustomFont>
+                <motion.h1
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
+                  variants={fadeDown}
+                >
+                  Your QR, Your Style
+                </motion.h1>
+              </CustomFont>
 
               <motion.p
                 className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-6 max-w-lg mx-auto lg:mx-0"

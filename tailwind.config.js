@@ -1,11 +1,12 @@
-// /** @type {import('tailwindcss').Config} */
-// module.exports = {
-//   theme: {
-//     extend: {
-//       screens: {
-//         custom: "1000px", // Custom breakpoint at 1000px
-//       },
-//     },
-//   },
-//   plugins: [],
-// };
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        custom: ["var(--font-custom)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "monospace"],
+      },
+    },
+  },
+  plugins: [],
+};

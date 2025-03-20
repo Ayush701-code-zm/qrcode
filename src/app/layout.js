@@ -1,15 +1,19 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Load local font but do NOT apply globally
+const myCustomFont = localFont({
+  src: "../../public/fonts/Megafont.ttf",
+  variable: "--font-custom", // Define variable but don't apply it globally
+  display: "swap",
 });
 
+// Keep Geist Mono as the global font
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata = {
@@ -22,10 +26,10 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${geistMono.variable}`}
     >
       <head />
-      <body className="font-sans">
+      <body className="font-geist-mono">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -268,8 +268,8 @@
 
 /* Font face declaration */
 @font-face {
-  font-family: 'Megafont';
-  src: url('/fonts/pixel-font.ttf') format('truetype');
+  font-family: "Megafont";
+  src: url("/fonts/pixel-font.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: fallback;
@@ -302,4 +302,19 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* In your global CSS file (styles/globals.css) */
+body {
+  font-family: var(--font-custom), system-ui, sans-serif;
+}
+
+/* For specific components */
+.heading {
+  font-family: var(--font-custom), system-ui, sans-serif;
+  font-weight: bold;
+}
+
+.font-custom {
+  font-family: "Megafont", sans-serif;
 }
