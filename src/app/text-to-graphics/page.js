@@ -5,6 +5,7 @@ import NavBar from "../components/NavBar";
 import FooterSection from "../components/FooterSection";
 import { useState } from 'react'
 
+
 export default function TextToGraphicsPage() {
     const [config, setConfig] = useState({
         format: 'left',

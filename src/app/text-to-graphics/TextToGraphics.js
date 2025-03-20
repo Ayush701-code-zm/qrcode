@@ -220,7 +220,25 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
 
   // Apply font
   useEffect(() => {
-    if (fontUrl) {
+    if (!fontUrl) {
+      // If no external font URL is available, use the local megafont from public folder
+      const localFontUrl = '/Megafont.ttf';
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = `
+        @font-face {
+          font-family: 'Megafont';
+          src: url('${localFontUrl}') format('truetype');
+          font-weight: bold;
+          font-style: normal;
+          font-display: fallback;
+        }
+      `;
+      document.head.appendChild(styleSheet);
+      if (qrRef.current) {
+        qrRef.current.style.fontFamily = 'Megafont';
+      }
+    } else {
+      // Original code for when fontUrl is present
       const styleSheet = document.createElement('style');
       styleSheet.textContent = `
         @font-face {
@@ -306,7 +324,8 @@ const TextToGraphics = ({ config, text, setText, textInput, setTextInput, naviga
     }, 1000);
   };
 
-  // Custom styles from CSS file
+
+
   const customStyles = {
     qrBox: {
       position: 'relative',
