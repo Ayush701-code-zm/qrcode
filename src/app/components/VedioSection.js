@@ -6,9 +6,11 @@ import Button from "../../components/ui/button";
 import Header from "@/components/commons/Header";
 import { Shield, Sparkles, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 function AboutWithVideoSection() {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,9 +73,15 @@ function AboutWithVideoSection() {
       transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
     },
   };
+  const handleButtonClick = () => {
+    router.push("/text-to-graphics"); // Navigate to the text-to-qr page
+  };
 
   return (
-    <section id="about" className="w-full overflow-hidden px-4 sm:px-6 py-12 md:py-16 mx-auto flex flex-col items-center">
+    <section
+      id="about"
+      className="w-full overflow-hidden px-4 sm:px-6 py-12 md:py-16 mx-auto flex flex-col items-center"
+    >
       <div className="w-full max-w-[1300px]">
         {/* Video Section */}
         <motion.div
@@ -480,6 +488,7 @@ function AboutWithVideoSection() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <Button
+                    onClick={handleButtonClick}
                     text={
                       <div className="flex items-center justify-center gap-2">
                         <Sparkles size={18} />

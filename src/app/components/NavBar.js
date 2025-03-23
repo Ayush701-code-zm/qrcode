@@ -7,10 +7,11 @@ import ModeToggle from "@/components/ModeToggle";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../../../public/images/logo.png";
-
+import { useRouter } from "next/navigation";
 function NavBar() {
   const [menu, setMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState("hero");
 
   // Handle scroll effect
@@ -189,6 +190,10 @@ function NavBar() {
     }
   };
 
+  const handleButtonClick = () => {
+    router.push("/text-to-graphics"); // Navigate to the text-to-qr page
+  };
+
   return (
     <>
       {/* NAVBAR FOR ALL SCREEN SIZES */}
@@ -293,6 +298,7 @@ function NavBar() {
               whileTap="tap"
             >
               <Button
+                onClick={handleButtonClick}
                 text={
                   <div className="flex items-center justify-center gap-2 px-1">
                     <span>Buy Now</span>

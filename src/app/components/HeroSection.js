@@ -6,10 +6,11 @@ import Button from "@/components/ui/button";
 import bannerImage from "../../../public/images/freepik.jpg";
 import { ArrowRight, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
-
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,6 +65,10 @@ const HeroSection = () => {
     },
   };
 
+  const handleButtonClick = () => {
+    router.push("/text-to-graphics"); // Navigate to the text-to-qr page
+  };
+
   return (
     <div id="hero" className="w-full overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
@@ -79,14 +84,12 @@ const HeroSection = () => {
             variants={fadeIn}
           >
             <motion.div className="relative">
-             
-                <motion.h1
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
-                  variants={fadeDown}
-                >
-                  Your QR, Your Style
-                </motion.h1>
-            
+              <motion.h1
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
+                variants={fadeDown}
+              >
+                Your QR, Your Style
+              </motion.h1>
 
               <motion.p
                 className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-6 max-w-lg mx-auto lg:mx-0"
@@ -110,9 +113,10 @@ const HeroSection = () => {
                   whileTap={{ scale: 0.98 }}
                 >
                   <Button
+                    onClick={handleButtonClick}
                     text={
                       <div className="flex items-center justify-center gap-2 cursor-pointer">
-                        <Wand2 size={18} className="cursor-pointer"  />
+                        <Wand2 size={18} className="cursor-pointer" />
                         <span>Design Your QR</span>
                         <motion.div
                           animate={{
