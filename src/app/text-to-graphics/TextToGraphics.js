@@ -38,7 +38,7 @@ const TextToGraphics = ({
   setTextInput,
   navigate,
 }) => {
-  let defaultBoxSize = 35;
+  let defaultBoxSize = 50;
   const [printifyStatus, setPrintifyStatus] = useState(false);
   const [spacingBuffer, setSpacingBuffer] = useState(5);
   const [mockupUrl, setMockupUrl] = useState([]);
@@ -57,6 +57,7 @@ const TextToGraphics = ({
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [showProductSelector, setShowProductSelector] = useState(false);
+  const [fontLoading, setFontLoading] = useState(true);
 
   // Product options
   const productOptions = [
@@ -249,60 +250,55 @@ const TextToGraphics = ({
     }
   }, [url]);
 
-  // Fetch font
+  // Modify font fetching and application
   useEffect(() => {
     const fetchFontVersion = async () => {
+      setFontLoading(true); // Start loading
       try {
         const version = Math.floor(Date.now() / 1000);
         const fontUrlWithVersion = `https://qrcode-mu-orcin.vercel.app/fonts/Megafont.ttf`;
-
+        
+        // Create a FontFace instance to preload the font
+        const font = new FontFace('Megafont', `url(${fontUrlWithVersion})`);
+        
+        // Wait for font to load
+        await font.load();
+        
+        // Add the loaded font to the document
+        document.fonts.add(font);
+        
         setFontUrl(fontUrlWithVersion);
+        setFontLoading(false); // End loading
       } catch (error) {
         console.log("Error fetching font metadata:", error);
+        setFontLoading(false); // End loading even if there's an error
       }
     };
 
     fetchFontVersion();
   }, []);
 
-  // Apply font
+  // Apply font with loading state
   useEffect(() => {
-    if (!fontUrl) {
-      const styleSheet = document.createElement("style");
-      styleSheet.textContent = `
-        @font-face {
-          font-family: 'Megafont';
-          src: url('${fontUrl}') format('truetype');
-          font-weight: 900;
-          font-style: normal;
-          font-display: fallback;
-        }
-      `;
-      document.head.appendChild(styleSheet);
-      if (qrRef.current) {
-        qrRef.current.style.fontFamily = "Megafont";
-        qrRef.current.style.fontWeight = "900";
-        qrRef.current.style.fontSize = "2.5rem";
-        qrRef.current.style.letterSpacing = "0.05em";
+    if (!fontUrl) return;
+
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+      @font-face {
+        font-family: 'Megafont';
+        src: url('${fontUrl}') format('truetype');
+        font-weight: 900;
+        font-style: normal;
+        font-display: fallback;
       }
-    } else {
-      const styleSheet = document.createElement("style");
-      styleSheet.textContent = `
-        @font-face {
-          font-family: 'Megafont';
-          src: url('${fontUrl}') format('truetype');
-          font-weight: 900;
-          font-style: normal;
-          font-display: fallback;
-        }
-      `;
-      document.head.appendChild(styleSheet);
-      if (qrRef.current) {
-        qrRef.current.style.fontFamily = "Megafont";
-        qrRef.current.style.fontWeight = "900";
-        qrRef.current.style.fontSize = "2.5rem";
-        qrRef.current.style.letterSpacing = "0.05em";
-      }
+    `;
+    document.head.appendChild(styleSheet);
+    
+    if (qrRef.current) {
+      qrRef.current.style.fontFamily = "Megafont";
+      qrRef.current.style.fontWeight = "900";
+      qrRef.current.style.fontSize = "2.5rem";
+      qrRef.current.style.letterSpacing = "0.05em";
     }
   }, [fontUrl]);
 
@@ -639,6 +635,18 @@ const TextToGraphics = ({
               <Loading />
               <p className="mt-4 text-gray-600 dark:text-gray-400">
                 {loderMsg}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* New font loading overlay */}
+        {fontLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full text-center">
+              <Loading />
+              <p className="mt-4 text-gray-600 dark:text-gray-400">
+                Loading Font...
               </p>
             </div>
           </div>
