@@ -254,7 +254,7 @@ const TextToGraphics = ({
     const fetchFontVersion = async () => {
       try {
         const version = Math.floor(Date.now() / 1000);
-        const fontUrlWithVersion = `https://peflgfeieqtklcpkhszz.supabase.co/storage/v1/object/public/fonts/user-font.ttf?v=${version}`;
+        const fontUrlWithVersion = `https://qrcode-mu-orcin.vercel.app/fonts/Megafont.ttf`;
 
         setFontUrl(fontUrlWithVersion);
       } catch (error) {
@@ -273,7 +273,7 @@ const TextToGraphics = ({
         @font-face {
           font-family: 'Megafont';
           src: url('${fontUrl}') format('truetype');
-          font-weight: bold;
+          font-weight: 900;
           font-style: normal;
           font-display: fallback;
         }
@@ -281,6 +281,9 @@ const TextToGraphics = ({
       document.head.appendChild(styleSheet);
       if (qrRef.current) {
         qrRef.current.style.fontFamily = "Megafont";
+        qrRef.current.style.fontWeight = "900";
+        qrRef.current.style.fontSize = "2.5rem";
+        qrRef.current.style.letterSpacing = "0.05em";
       }
     } else {
       const styleSheet = document.createElement("style");
@@ -288,7 +291,7 @@ const TextToGraphics = ({
         @font-face {
           font-family: 'Megafont';
           src: url('${fontUrl}') format('truetype');
-          font-weight: bold;
+          font-weight: 900;
           font-style: normal;
           font-display: fallback;
         }
@@ -296,6 +299,9 @@ const TextToGraphics = ({
       document.head.appendChild(styleSheet);
       if (qrRef.current) {
         qrRef.current.style.fontFamily = "Megafont";
+        qrRef.current.style.fontWeight = "900";
+        qrRef.current.style.fontSize = "2.5rem";
+        qrRef.current.style.letterSpacing = "0.05em";
       }
     }
   }, [fontUrl]);
