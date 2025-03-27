@@ -38,7 +38,7 @@ const TextToGraphics = ({
   setTextInput,
   navigate,
 }) => {
-  let defaultBoxSize = 50;
+  let defaultBoxSize = 35;
   const [printifyStatus, setPrintifyStatus] = useState(false);
   const [spacingBuffer, setSpacingBuffer] = useState(5);
   const [mockupUrl, setMockupUrl] = useState([]);
