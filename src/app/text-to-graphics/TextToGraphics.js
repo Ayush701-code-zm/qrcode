@@ -71,7 +71,7 @@ const TextToGraphics = ({
         const formattedProducts = response.data.result.map(product => ({
           id: product.id,
           name: product.name,
-          price: 24.99, // You might want to add price to your API response
+          price: 24.99, 
           image: product.thumbnail_url,
           external_id: product.external_id,
           variants: product.variants
@@ -168,12 +168,12 @@ const TextToGraphics = ({
                   "Successfully Created mockups, Now Getting Images..."
                 );
                 const payload = encodeURIComponent(
-                  JSON.stringify(response.data.successfulMockups)
+                  JSON.stringify(response.data.successful_mockups)
                 );
                 console.log(payload);
                 await timer(5000);
                 const successfulUrls = await axios.get(
-                  `https://font-file-server.vercel.app/getMockup?payload=${payload}`
+                  `http://localhost:3001/uploadImage/mockup-results?payload=${payload}`
                 );
                 setLoader(false);
                 if (successfulUrls.status === 200)
