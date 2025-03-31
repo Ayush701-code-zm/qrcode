@@ -150,7 +150,7 @@ const TextToGraphics = ({
           .then(async (dataUrl) => {
             setSpacingBuffer(5);
             // let data_ = dataUrl.replace("data:image/png;base64,", "");
-            console.log(dataUrl);
+           
             let body = {
               file_name: `${generateFileName(text)}.png`,
               contents: dataUrl,
@@ -167,11 +167,17 @@ const TextToGraphics = ({
                 setLoderMsg(
                   "Successfully Created mockups, Now Getting Images..."
                 );
-                const payload = encodeURIComponent(
-                  JSON.stringify(response.data.successful_mockups)
-                );
+                // const payload = encodeURIComponent(
+                //   JSON.stringify(response.data.successful_mockups)
+                // );
+
+                const payload = JSON.stringify(response.data.results.successful_mockups)
+             
+
+
                 console.log(payload);
                 await timer(5000);
+
                 const successfulUrls = await axios.get(
                   `http://localhost:3001/uploadImage/mockup-results?payload=${payload}`
                 );
@@ -180,9 +186,9 @@ const TextToGraphics = ({
                   setMockupUrl(successfulUrls.data);
                 else setErrorMsg(successfulUrls.message);
 
-                console.log(successfulUrls);
+                
               }
-              console.log(mockupUrl);
+            
               if (response.status !== 200) {
                 setLoader(false);
                 setErrorMsg(response.data.error);
@@ -228,8 +234,7 @@ const TextToGraphics = ({
           spacingArr?.includes(index + 1) ? "\n" : ""
         }`;
       });
-      console.log("final:", lettersWithNewLineBreak);
-      console.log(boxSize, "Box size");
+
       setText(lettersWithNewLineBreak);
     },
     [config?.format, setText, setTextInput]
@@ -317,7 +322,7 @@ const TextToGraphics = ({
     // Get exact dimensions of the text content
     let textWidth = textRef.current.clientWidth;
     let textHeight = textRef.current.clientHeight;
-    console.log(textWidth, textHeight, "text dimensions");
+
 
     // Calculate appropriate size based on text content
     let newSize;
@@ -366,11 +371,7 @@ const TextToGraphics = ({
       setQrSize(newSize - (textHeight + spacingBuffer) * 2);
     }
 
-    console.log(
-      `New size: ${newSize}, Line count: ${
-        (text.match(/\n/g) || []).length + 1
-      }`
-    );
+  
   }, [text, spacingBuffer, config?.format, defaultBoxSize]);
 
   // Add product to cart
