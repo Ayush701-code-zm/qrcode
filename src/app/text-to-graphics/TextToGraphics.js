@@ -58,31 +58,40 @@ const TextToGraphics = ({
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [showProductSelector, setShowProductSelector] = useState(false);
   const [fontLoading, setFontLoading] = useState(true);
+  const [productOptions, setProductOptions] = useState([]);
+  const [productLoading, setProductLoading] = useState(true);
 
-  // Product options
-  const productOptions = [
-    { id: 1, name: "T-Shirt", price: 24.99, image: "/api/placeholder/100/100" },
-    { id: 2, name: "Mug", price: 14.99, image: "/api/placeholder/100/100" },
-    {
-      id: 3,
-      name: "Sticker Pack",
-      price: 9.99,
-      image: "/api/placeholder/100/100",
-    },
-    {
-      id: 4,
-      name: "Tote Bag",
-      price: 19.99,
-      image: "/api/placeholder/100/100",
-    },
-    { id: 5, name: "Hoodie", price: 39.99, image: "/api/placeholder/100/100" },
-    {
-      id: 6,
-      name: "Phone Case",
-      price: 19.99,
-      image: "/api/placeholder/100/100",
-    },
-  ];
+  // Add useEffect to fetch products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setProductLoading(true);
+      try {
+        const response = await axios.get('http://localhost:3001/uploadImage/products');
+        // Transform the API response to match the expected format
+        const formattedProducts = response.data.result.map(product => ({
+          id: product.id,
+          name: product.name,
+          price: 24.99, // You might want to add price to your API response
+          image: product.thumbnail_url,
+          external_id: product.external_id,
+          variants: product.variants
+        }));
+        
+        setProductOptions(formattedProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // Set fallback default products in case of error
+        setProductOptions([
+          { id: 1, name: "T-Shirt", price: 24.99, image: "/api/placeholder/100/100" },
+          { id: 2, name: "Mug", price: 14.99, image: "/api/placeholder/100/100" },
+        ]);
+      } finally {
+        setProductLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Download function for PNG
   const downloadPng = async () => {
@@ -149,8 +158,8 @@ const TextToGraphics = ({
 
             try {
               const response = await axios.post(
-                //"http://localhost:3001/uploadImage",
-                "https://font-file-server.vercel.app/uploadImage",
+                "http://localhost:3001/uploadImage/mockups",
+              
                 body
               );
               if (response.status === 200) {
@@ -598,8 +607,8 @@ const TextToGraphics = ({
         {/* Print Results View */}
         {activeTab === "results" && (
           <PrintResults
-            loader={loader}
-            loderMsg={loderMsg}
+            loader={loader || productLoading}
+            loderMsg={productLoading ? "Loading products..." : loderMsg}
             mockupUrl={mockupUrl}
             errorMsg={errorMsg}
             addToCart={addToCart}
@@ -627,6 +636,7 @@ const TextToGraphics = ({
           selectedProducts={selectedProducts}
           toggleProductSelection={toggleProductSelection}
           addSelectedToCart={addSelectedToCart}
+          loading={productLoading}
         />
         {/* Loading Overlay */}
         {loader && (
