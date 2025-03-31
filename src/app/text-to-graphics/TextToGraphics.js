@@ -183,7 +183,11 @@ const TextToGraphics = ({
                 );
                 setLoader(false);
                 if (successfulUrls.status === 200)
+                {
+                  setActiveTab("results");
                   setMockupUrl(successfulUrls.data);
+                }
+                 
                 else setErrorMsg(successfulUrls.message);
 
                 
