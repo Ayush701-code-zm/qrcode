@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { ShoppingCart, Check, ChevronDown, MapPin, CreditCard } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  ShoppingCart,
+  Check,
+  ChevronDown,
+  MapPin,
+  CreditCard,
+} from "lucide-react";
 import axios from "axios";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
-import  Button  from "../../../components/ui/button";
-import { Select,
+import Button from "../../../components/ui/button";
+import {
+  Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue,} from "../../../components/ui/select"
+  SelectValue,
+} from "../../../components/ui/select";
 
-const Cart = ({
-  cart,
-  setCart,
-  setActiveTab,
-  orderPlaced,
-  setOrderPlaced,
-}) => {
+const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
   const [shippingRates, setShippingRates] = useState([]);
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [isLoadingRates, setIsLoadingRates] = useState(false);
@@ -27,6 +29,12 @@ const Cart = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedVariants, setSelectedVariants] = useState({});
   const [showAddressForm, setShowAddressForm] = useState(false);
+
+  // Track the last focused input
+  const [lastFocusedInput, setLastFocusedInput] = useState(null);
+
+  // Keep refs to input elements to restore focus
+  const inputRefs = useRef({});
 
   // Address form state
   const [addressForm, setAddressForm] = useState({
@@ -38,63 +46,85 @@ const Cart = ({
     state_code: "",
     country_code: "US",
     zip: "",
-    phone: ""
+    phone: "",
   });
 
   // Handle variant change
-  const handleVariantChange = (itemIndex, productId, variantId, variantData) => {
+  const handleVariantChange = (
+    itemIndex,
+    productId,
+    variantId,
+    variantData
+  ) => {
     // Update the cart item with new variant info
     const updatedCart = [...cart];
     updatedCart[itemIndex] = {
       ...updatedCart[itemIndex],
       variant_id: variantId,
       price: variantData.price,
-      size: variantData.size
+      size: variantData.size,
     };
     setCart(updatedCart);
-    
+
     // Store selected variant
     setSelectedVariants({
       ...selectedVariants,
-      [productId]: variantId
+      [productId]: variantId,
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Combine both state updates into a single function call
-    setAddressForm(prevForm => {
-      // Only clear error message if needed and in the same update cycle
-      if (errorMessage) {
-        setErrorMessage("");
-      }
-      
-      // Return the updated form state
-      return {
-        ...prevForm,
-        [name]: value
-      };
-    });
+    setAddressForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-  
+
+  // Effect to restore focus after re-render
+  useEffect(() => {
+    if (lastFocusedInput && inputRefs.current[lastFocusedInput]) {
+      // Use setTimeout to ensure the focus happens after the re-render
+      setTimeout(() => {
+        const input = inputRefs.current[lastFocusedInput];
+        if (input) {
+          input.focus();
+
+          // If it's a text input, place cursor at the end
+          if (
+            input.type !== "select-one" &&
+            typeof input.setSelectionRange === "function"
+          ) {
+            const length = input.value.length;
+            input.setSelectionRange(length, length);
+          }
+        }
+      }, 0);
+    }
+  }, [addressForm, lastFocusedInput]);
+
+  // Set up ref for input elements
+  const setInputRef = (name, element) => {
+    inputRefs.current[name] = element;
+  };
+
   // Fetch shipping rates
   const fetchShippingRates = async () => {
     if (!validateAddressForm()) {
       setErrorMessage("Please fill out all required address fields");
       return;
     }
-    
+
     setIsLoadingRates(true);
     setErrorMessage("");
-    
+
     try {
       // Prepare items for shipping rate request
-      const items = cart.map(item => ({
+      const items = cart.map((item) => ({
         variant_id: item.variant_id,
-        quantity: 1
+        quantity: 1,
       }));
-      
+
       // Prepare recipient data
       const recipient = {
         name: addressForm.name,
@@ -103,15 +133,18 @@ const Cart = ({
         city: addressForm.city,
         state_code: addressForm.state_code,
         country_code: addressForm.country_code,
-        zip: addressForm.zip
+        zip: addressForm.zip,
       };
-      
+
       // Call your API to get shipping rates
-      const response = await axios.post('http://localhost:3001/uploadImage/shipping/rates', {
-        recipient,
-        items
-      });
-      
+      const response = await axios.post(
+        "http://localhost:3001/uploadImage/shipping/rates",
+        {
+          recipient,
+          items,
+        }
+      );
+
       if (response.data.success) {
         setShippingRates(response.data.rates);
         if (response.data.rates.length > 0) {
@@ -121,80 +154,108 @@ const Cart = ({
         setErrorMessage("Failed to get shipping rates: " + response.data.error);
       }
     } catch (error) {
-      setErrorMessage("Error fetching shipping rates: " + (error.response?.data?.error || error.message));
+      setErrorMessage(
+        "Error fetching shipping rates: " +
+          (error.response?.data?.error || error.message)
+      );
     } finally {
       setIsLoadingRates(false);
     }
   };
-  
+
   // Validate address form
   const validateAddressForm = () => {
-    const requiredFields = ['name', 'email', 'address1', 'city', 'state_code', 'zip', 'phone'];
-    return requiredFields.every(field => addressForm[field]?.trim());
+    const requiredFields = [
+      "name",
+      "email",
+      "address1",
+      "city",
+      "state_code",
+      "zip",
+      "phone",
+    ];
+    return requiredFields.every((field) => addressForm[field]?.trim());
   };
 
-  // Place order
+  // Place order with Stripe checkout
   const placeOrder = async () => {
     if (!selectedShipping) {
       setErrorMessage("Please select a shipping method");
       return;
     }
-    
+
     setIsPlacingOrder(true);
     setErrorMessage("");
-    
+
     try {
-      // Prepare items for order
-      const items = cart.map(item => ({
+      // Prepare items for Stripe checkout
+      const lineItems = cart.map((item) => ({
         variant_id: parseInt(item.variant_id),
         quantity: 1,
-        price: item.price.toString(),
-        retail_price: item.price.toString(),
+        price: item.price,
         name: item.name,
-        files: [{
-          type: "default",
-          url: item.designUrl || "",
-          visible: true
-        }]
+        image: item.image,
+        designUrl: item.designUrl || "",
+        designText: item.designText || "",
+        size: item.size || "",
       }));
-      
-      // Prepare recipient data
-      const recipient = {
+
+      // Prepare customer data
+      const customer = {
         name: addressForm.name,
         email: addressForm.email,
-        address1: addressForm.address1,
-        address2: addressForm.address2 || "",
-        city: addressForm.city,
-        state_code: addressForm.state_code,
-        country_code: addressForm.country_code,
-        zip: addressForm.zip,
-        phone: addressForm.phone
+        address: {
+          line1: addressForm.address1,
+          line2: addressForm.address2 || "",
+          city: addressForm.city,
+          state: addressForm.state_code,
+          country: addressForm.country_code,
+          postal_code: addressForm.zip,
+        },
+        phone: addressForm.phone,
       };
-      
-      // Call your API to place order
-      const response = await axios.post('/api/placeOrder', {
-        recipient,
-        items,
-        shipping_option_id: selectedShipping
-      });
-      
-      if (response.data.success) {
-        setOrderInfo(response.data.order);
-        setOrderPlaced(true);
+
+      // Get shipping rate details
+      const selectedRate = shippingRates.find(
+        (rate) => rate.id === selectedShipping
+      );
+
+      // Call Stripe checkout endpoint
+      const response = await axios.post(
+        "http://localhost:3001/stripe/create-checkout-session",
+        {
+          customer,
+          items: lineItems,
+          shipping: {
+            id: selectedShipping,
+            name: selectedRate?.name || "Standard Shipping",
+            rate: selectedRate?.rate || shippingCost,
+          },
+        }
+      );
+
+      if (response.data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = response.data.url;
       } else {
-        setErrorMessage("Failed to place order: " + response.data.error);
+        setErrorMessage("Failed to create checkout session");
       }
     } catch (error) {
-      setErrorMessage("Error placing order: " + (error.response?.data?.error || error.message));
+      setErrorMessage(
+        "Error creating checkout session: " +
+          (error.response?.data?.error || error.message)
+      );
     } finally {
       setIsPlacingOrder(false);
     }
   };
-  
+
   const subtotal = cart.reduce((total, item) => total + item.price, 0);
-  const shippingCost = selectedShipping ? 
-    shippingRates.find(rate => rate.id === selectedShipping)?.rate || 4.99 : 
-    4.99;
+  const shippingCost = selectedShipping
+    ? parseFloat(
+        shippingRates.find((rate) => rate.id === selectedShipping)?.rate
+      ) || 4.99
+    : 4.99;
   const total = subtotal + shippingCost;
 
   const OrderConfirmation = () => (
@@ -217,13 +278,14 @@ const Cart = ({
             Order Number:
           </span>
           <span className="font-medium text-gray-800 dark:text-gray-200">
-            {orderInfo?.id || Math.floor(Math.random() * 1000000).toString().padStart(6, "0")}
+            {orderInfo?.id ||
+              Math.floor(Math.random() * 1000000)
+                .toString()
+                .padStart(6, "0")}
           </span>
         </div>
         <div className="flex justify-between mb-2">
-          <span className="text-gray-600 dark:text-gray-400">
-            Status:
-          </span>
+          <span className="text-gray-600 dark:text-gray-400">Status:</span>
           <span className="font-medium text-gray-800 dark:text-gray-200">
             {orderInfo?.status || "Processing"}
           </span>
@@ -233,7 +295,9 @@ const Cart = ({
             Estimated Delivery:
           </span>
           <span className="font-medium text-gray-800 dark:text-gray-200">
-            {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+            {new Date(
+              Date.now() + 7 * 24 * 60 * 60 * 1000
+            ).toLocaleDateString()}
           </span>
         </div>
       </div>
@@ -256,8 +320,11 @@ const Cart = ({
         <MapPin size={18} className="mr-2" />
         Shipping Address
       </h3>
-      
-      <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
         <div className="space-y-2">
           <Label htmlFor="name">Full Name *</Label>
           <Input
@@ -265,10 +332,13 @@ const Cart = ({
             name="name"
             value={addressForm.name}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("name")}
+            ref={(el) => setInputRef("name", el)}
+            autoComplete="off"
             required
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="email">Email *</Label>
           <Input
@@ -277,10 +347,12 @@ const Cart = ({
             type="email"
             value={addressForm.email}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("email")}
+            ref={(el) => setInputRef("email", el)}
             required
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="address1">Address Line 1 *</Label>
           <Input
@@ -288,10 +360,12 @@ const Cart = ({
             name="address1"
             value={addressForm.address1}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("address1")}
+            ref={(el) => setInputRef("address1", el)}
             required
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="address2">Address Line 2</Label>
           <Input
@@ -299,9 +373,11 @@ const Cart = ({
             name="address2"
             value={addressForm.address2}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("address2")}
+            ref={(el) => setInputRef("address2", el)}
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="city">City *</Label>
           <Input
@@ -309,10 +385,12 @@ const Cart = ({
             name="city"
             value={addressForm.city}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("city")}
+            ref={(el) => setInputRef("city", el)}
             required
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="state_code">State/Province *</Label>
           <Input
@@ -320,10 +398,12 @@ const Cart = ({
             name="state_code"
             value={addressForm.state_code}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("state_code")}
+            ref={(el) => setInputRef("state_code", el)}
             required
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="zip">ZIP/Postal Code *</Label>
           <Input
@@ -331,10 +411,12 @@ const Cart = ({
             name="zip"
             value={addressForm.zip}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("zip")}
+            ref={(el) => setInputRef("zip", el)}
             required
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="phone">Phone Number *</Label>
           <Input
@@ -343,23 +425,30 @@ const Cart = ({
             type="tel"
             value={addressForm.phone}
             onChange={handleInputChange}
+            onFocus={() => setLastFocusedInput("phone")}
+            ref={(el) => setInputRef("phone", el)}
             required
           />
         </div>
-        
+
         <div className="md:col-span-2 space-y-2">
           <Label htmlFor="country_code">Country</Label>
-          <Select 
-            name="country_code" 
-            value={addressForm.country_code} 
+          <Select
+            name="country_code"
+            value={addressForm.country_code}
             onValueChange={(value) => {
               setAddressForm({
                 ...addressForm,
-                country_code: value
+                country_code: value,
               });
+              setLastFocusedInput("country_code");
             }}
+            onFocus={() => setLastFocusedInput("country_code")}
           >
-            <SelectTrigger id="country_code">
+            <SelectTrigger
+              id="country_code"
+              ref={(el) => setInputRef("country_code", el)}
+            >
               <SelectValue placeholder="Select Country" />
             </SelectTrigger>
             <SelectContent>
@@ -370,7 +459,7 @@ const Cart = ({
             </SelectContent>
           </Select>
         </div>
-        
+
         <div className="md:col-span-2 mt-4 flex justify-end">
           <button
             onClick={fetchShippingRates}
@@ -383,17 +472,18 @@ const Cart = ({
       </form>
     </div>
   );
-  
 
   const ShippingOptions = () => (
     <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
       <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">
         Shipping Options
       </h3>
-      
+
       {isLoadingRates ? (
         <div className="text-center py-4">
-          <p className="text-gray-600 dark:text-gray-400">Loading shipping options...</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Loading shipping options...
+          </p>
         </div>
       ) : shippingRates.length > 0 ? (
         <div className="space-y-2">
@@ -425,12 +515,12 @@ const Cart = ({
                       {rate.name}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {rate.description || "Standard shipping"}
+                      Delivery: {rate.minDeliveryDate} - {rate.maxDeliveryDate}
                     </p>
                   </div>
                 </div>
                 <p className="font-medium text-gray-800 dark:text-gray-200">
-                  ${rate.rate.toFixed(2)}
+                  ${parseFloat(rate.rate).toFixed(2)}
                 </p>
               </div>
             </div>
@@ -439,7 +529,8 @@ const Cart = ({
       ) : (
         <div className="text-center py-4">
           <p className="text-gray-600 dark:text-gray-400">
-            {errorMessage || "No shipping options available. Please check your address."}
+            {errorMessage ||
+              "No shipping options available. Please check your address."}
           </p>
         </div>
       )}
@@ -502,38 +593,51 @@ const Cart = ({
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex flex-col md:flex-row md:items-center">
                   {/* Variant selection */}
                   {item.pricing && item.pricing.variants && (
                     <div className="relative mb-3 md:mb-0 md:mr-6 w-full md:w-40">
                       <select
-                        value={selectedVariants[item.product_id] || item.variant_id || ""}
+                        value={
+                          selectedVariants[item.product_id] ||
+                          item.variant_id ||
+                          ""
+                        }
                         onChange={(e) => {
                           const variantId = e.target.value;
                           const variantData = item.pricing.variants[variantId];
-                          handleVariantChange(index, item.product_id, variantId, variantData);
+                          handleVariantChange(
+                            index,
+                            item.product_id,
+                            variantId,
+                            variantData
+                          );
                         }}
                         className="block w-full pl-3 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       >
-                        {Object.entries(item.pricing.variants).map(([variantId, variant]) => (
-                          <option key={variantId} value={variantId}>
-                            {variant.size} - ${variant.price.toFixed(2)}
-                          </option>
-                        ))}
+                        {Object.entries(item.pricing.variants).map(
+                          ([variantId, variant]) => (
+                            <option key={variantId} value={variantId}>
+                              {variant.size} - ${variant.price.toFixed(2)}
+                            </option>
+                          )
+                        )}
                       </select>
                       <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500 dark:text-gray-400">
                         <ChevronDown size={16} />
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="flex items-center justify-between md:justify-end w-full">
                     <span className="font-medium text-gray-800 dark:text-gray-200 mr-4">
                       ${item.price.toFixed(2)}
                     </span>
                     <button
-                      onClick={() => setCart(cart.filter((_, i) => i !== index))}
+                      onClick={() =>
+                        setCart(cart.filter((_, i) => i !== index))
+                      }
                       className="text-red-500 hover:text-red-600 transition-colors duration-200"
                     >
                       Remove
@@ -543,7 +647,7 @@ const Cart = ({
               </div>
             ))}
           </div>
-          
+
           <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
             <div className="flex justify-between mb-2">
               <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
@@ -552,9 +656,7 @@ const Cart = ({
               </span>
             </div>
             <div className="flex justify-between mb-4">
-              <span className="text-gray-600 dark:text-gray-400">
-                Shipping
-              </span>
+              <span className="text-gray-600 dark:text-gray-400">Shipping</span>
               <span className="font-medium text-gray-800 dark:text-gray-200">
                 ${shippingCost.toFixed(2)}
               </span>
@@ -567,7 +669,7 @@ const Cart = ({
                 ${total.toFixed(2)}
               </span>
             </div>
-            
+
             {!showAddressForm ? (
               <button
                 onClick={() => setShowAddressForm(true)}
@@ -582,17 +684,17 @@ const Cart = ({
                 className="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center"
               >
                 <CreditCard size={18} className="mr-2" />
-                {isPlacingOrder ? "Processing..." : "Place Order"}
+                {isPlacingOrder ? "Processing..." : "Proceed to Payment"}
               </button>
             ) : null}
-            
+
             {errorMessage && (
               <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
                 {errorMessage}
               </div>
             )}
           </div>
-          
+
           {showAddressForm && <AddressForm />}
           {shippingRates.length > 0 && <ShippingOptions />}
         </div>
