@@ -378,13 +378,11 @@ const TextToGraphics = ({
   
   }, [text, spacingBuffer, config?.format, defaultBoxSize]);
 
-  // Add product to cart
-  const addToCart = (productId) => {
-    const product = productOptions.find((p) => p.id === productId);
-    if (product) {
-      setCart([...cart, { ...product, designText: text, designUrl: url }]);
-    }
-  };
+// Updated addToCart function
+const addToCart = (cartItem) => {
+  // Simply add the received cart item to the cart
+  setCart([...cart, cartItem]);
+};
 
   // Handle order submission
   const placeOrder = async () => {

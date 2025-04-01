@@ -12,30 +12,83 @@ const PrintResults = ({
   setActiveTab,
   productOptions,
 }) => {
-  const [selectedPlacements, setSelectedPlacements] = useState({});
+  const [selectedVariants, setSelectedVariants] = useState({});
+  const [variantPrices, setVariantPrices] = useState({});
+  const [variantSizes, setVariantSizes] = useState({});
   
-  // Printful placement options - can be expanded based on product types
-  const placementOptions = {
-    tshirt: ["Front", "Back", "Left sleeve", "Right sleeve"],
-    hat: ["Front", "Side", "Back"],
-    mug: ["Front", "Back", "Wrap around"],
-    default: ["Front", "Back"]
-  };
-
-  // Get placement options based on product ID
-  const getPlacementOptions = (productId) => {
-    if (productId >= 200 && productId < 210) return placementOptions.hat;
-    if (productId >= 220 && productId < 230) return placementOptions.tshirt;
-    if (productId >= 300 && productId < 310) return placementOptions.mug;
-    return placementOptions.default;
-  };
-
-  // Handle placement selection
-  const handlePlacementChange = (productId, placement) => {
-    setSelectedPlacements({
-      ...selectedPlacements,
-      [productId]: placement
+  // Handle variant selection
+  const handleVariantChange = (productId, variantId) => {
+    // Get the product from mockups - first check if we're dealing with the successful array
+    let product = null;
+    if (mockupUrl?.mockups?.successful && Array.isArray(mockupUrl.mockups.successful)) {
+      product = mockupUrl.mockups.successful.find(item => item.product_id === productId);
+    } else if (mockupUrl?.mockups && Array.isArray(mockupUrl.mockups)) {
+      product = mockupUrl.mockups.find(item => item.product_id === productId);
+    }
+    
+    if (!product) return;
+    
+    // Get the variant info
+    const variant = product.pricing.variants[variantId];
+    if (!variant) return;
+    
+    setSelectedVariants({
+      ...selectedVariants,
+      [productId]: variantId
     });
+    
+    setVariantPrices({
+      ...variantPrices,
+      [productId]: variant.price
+    });
+    
+    setVariantSizes({
+      ...variantSizes,
+      [productId]: variant.size
+    });
+  };
+
+  // Get default variant for a product
+  const getDefaultVariant = (product) => {
+    if (!product || !product.pricing || !product.pricing.variants) return null;
+    
+    // Get first variant ID
+    const firstVariantId = Object.keys(product.pricing.variants)[0];
+    return firstVariantId;
+  };
+
+  // Function to get mockups array based on API response format
+  const getMockups = () => {
+    if (mockupUrl?.mockups?.successful && Array.isArray(mockupUrl.mockups.successful)) {
+      return mockupUrl.mockups.successful;
+    } else if (mockupUrl?.mockups && Array.isArray(mockupUrl.mockups)) {
+      return mockupUrl.mockups;
+    }
+    return [];
+  };
+
+  // Handle adding to cart
+  const handleAddToCart = (product) => {
+    const productId = product.product_id;
+    const variantId = selectedVariants[productId];
+    
+    if (!variantId) return;
+    
+    // Create cart item object
+    const cartItem = {
+      product_id: productId,
+      variant_id: variantId,
+      price: variantPrices[productId],
+      name: product.product_name,
+      size: variantSizes[productId],
+      image: product.mockupUrl,
+      designText: product.placement || "Custom Design", // Fallback text if no placement info
+      designUrl: "" // Add design URL if available
+    };
+    
+    // Add to cart and navigate to cart tab
+    addToCart(cartItem);
+    setActiveTab("cart");
   };
 
   const container = {
@@ -53,10 +106,13 @@ const PrintResults = ({
     show: { y: 0, opacity: 1 }
   };
 
+  // Get mockups array
+  const mockups = getMockups();
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
       {/* Catchy message banner */}
-      {mockupUrl?.mockups?.length > 0 && (
+      {mockups.length > 0 && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -64,7 +120,7 @@ const PrintResults = ({
           className="mb-6 p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-md"
         >
           <h3 className="text-xl font-bold mb-1">🎉 Your designs are ready!</h3>
-          <p>Choose your preferred placement and add these awesome products to your cart.</p>
+          <p>Select your preferred size and add these awesome products to your cart.</p>
         </motion.div>
       )}
 
@@ -77,16 +133,27 @@ const PrintResults = ({
           <p className="text-blue-600 dark:text-blue-400 mb-4">{loderMsg}</p>
           <Loading />
         </div>
-      ) : mockupUrl?.mockups?.length > 0 ? (
+      ) : mockups.length > 0 ? (
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockupUrl.mockups.map((item, i) => {
+            {mockups.map((item, i) => {
               const productId = item.product_id;
-              const options = getPlacementOptions(productId);
+              const variants = item.pricing?.variants || {};
+              
+              // Initialize selected variant if not already set
+              if (!selectedVariants[productId]) {
+                const defaultVariant = getDefaultVariant(item);
+                if (defaultVariant) {
+                  // Set default variant and price
+                  setTimeout(() => {
+                    handleVariantChange(productId, defaultVariant);
+                  }, 0);
+                }
+              }
               
               return item.mockupUrl ? (
                 <motion.div 
@@ -97,27 +164,31 @@ const PrintResults = ({
                   <img
                     className="w-full h-auto object-cover"
                     src={item.mockupUrl}
-                    alt={`Mockup for product ID: ${item.product_id}`}
+                    alt={`Mockup for ${item.product_name}`}
                   />
                   <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      Product ID: {item.product_id}
+                    <p className="font-medium text-gray-800 dark:text-gray-200 mb-1">
+                      {item.product_name}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                      Retail Price: ${item.pricing.retail_price.toFixed(2)}
                     </p>
                     
-                    {/* Placement dropdown */}
+                    {/* Variant dropdown */}
                     <div className="relative mb-3">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Design Placement
+                        Select Size
                       </label>
                       <div className="relative">
                         <select
-                          value={selectedPlacements[productId] || options[0]}
-                          onChange={(e) => handlePlacementChange(productId, e.target.value)}
+                          value={selectedVariants[productId] || ""}
+                          onChange={(e) => handleVariantChange(productId, e.target.value)}
                           className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
-                          {options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
+                          <option value="" disabled>Choose a size</option>
+                          {Object.entries(variants).map(([variantId, variant]) => (
+                            <option key={variantId} value={variantId}>
+                              {variant.size} - ${variant.price.toFixed(2)}
                             </option>
                           ))}
                         </select>
@@ -127,16 +198,27 @@ const PrintResults = ({
                       </div>
                     </div>
                     
+                    {/* Display selected variant info */}
+                    {selectedVariants[productId] && (
+                      <div className="mb-3">
+                        <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                          Size: {variantSizes[productId]} - ${variantPrices[productId]?.toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+                    
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        addToCart(item.product_id);
-                        setActiveTab("cart");
-                      }}
-                      className="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-colors duration-200"
+                      onClick={() => handleAddToCart(item)}
+                      disabled={!selectedVariants[productId]}
+                      className={`w-full py-2 ${
+                        selectedVariants[productId]
+                          ? "bg-orange-500 hover:bg-orange-600"
+                          : "bg-gray-300 dark:bg-gray-600 cursor-not-allowed"
+                      } text-white rounded-md font-medium transition-colors duration-200`}
                     >
-                      Add to Cart
+                      {selectedVariants[productId] ? "Add to Cart" : "Select a Size"}
                     </motion.button>
                   </div>
                 </motion.div>
