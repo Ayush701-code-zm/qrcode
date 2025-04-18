@@ -133,7 +133,7 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
       // Calculate the current cart total
       const cartTotal = subtotal;
 
-      // Get product IDs from cart items (fallback to empty string if product_id is missing)
+      // Get product IDs from cart items
       const productIds = cart.map((item) => item.product_id || "");
 
       const response = await axios.post(
@@ -145,12 +145,14 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
       );
 
       if (response.data.valid) {
-        // Ensure couponInfo has all required fields with fallbacks
+        // Extract discount info from the response structure
+        const couponData = response.data.coupon;
+
         setCouponInfo({
-          code: response.data.code || couponCode,
-          type: response.data.type || "percentage",
-          value:
-            typeof response.data.value === "number" ? response.data.value : 0,
+          code: couponData.code,
+          type: couponData.type, // "percentage"
+          value: couponData.value, // 10
+          maxDiscount: couponData.maxDiscount, // 10
           valid: true,
         });
         setCouponError("");
@@ -325,10 +327,13 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
       ) || 4.99
     : 4.99;
 
-  // Calculate discount amount with null checks
+  // Calculate discount amount with max discount consideration
   const discount = couponInfo
     ? couponInfo.type === "percentage"
-      ? (subtotal * (couponInfo.value || 0)) / 100
+      ? Math.min(
+          (subtotal * (couponInfo.value || 0)) / 100,
+          couponInfo.maxDiscount || Infinity
+        ) // Apply percentage with maximum cap
       : Math.min(couponInfo.value || 0, subtotal) // Fixed amount discount, capped at subtotal
     : 0;
 
