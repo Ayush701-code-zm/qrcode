@@ -88,16 +88,20 @@ const HeroSection = () => {
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 leading-tight"
                 variants={fadeDown}
               >
-                Your QR, Your Style
+                Express Yourself. No Labels, Just Art.
               </motion.h1>
 
               <motion.p
                 className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-6 max-w-lg mx-auto lg:mx-0"
                 variants={fadeUp}
               >
-                Create custom QR codes that blend technology with style. Design,
-                generate, and print your personalized QR patterns on
-                high-quality apparel that&apos;s uniquely you.
+                We live in a world where everyone is their own brand. But what
+                if self-expression wasn&apos;t about logos or labels? What if it
+                was about creating something uniquely yours? Our platform
+                transforms words into striking geometric art—Square Kufic meets
+                the Latin alphabet. Whether it&apos;s your name, a mantra, or a
+                secret message, craft it into a perfect square. Bold. Personal.
+                Yours.
               </motion.p>
 
               <motion.div

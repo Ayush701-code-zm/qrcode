@@ -78,11 +78,13 @@ const TestimonialsMarquee = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300">
-            QR Fashion Success Stories
+            Your Words, Your Art, Your Story
           </h1>
-          <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-            Discover how our customers are using QR code fashion to connect
-            their physical style with their digital presence.
+          <p className="text-base md:text-lg lg:text-normal text-gray-700 dark:text-gray-300 mt-4 w-full lg:w-full">
+            This isn&apos;t about following trends. It&apos;s about creating
+            something authentic. Something that represents you, without
+            explanation. Your art, your message—hidden or loud, it&apos;s up to
+            you. Create. Share. Wear. Make it yours.
           </p>
         </div>
 
@@ -108,20 +110,22 @@ const TestimonialsMarquee = () => {
 
             <div className="w-full">
               {/* Duplicated testimonials and decreased speed for smoother animation */}
-              <Marquee 
-                gradient={false} 
-                speed={25} 
+              <Marquee
+                gradient={false}
+                speed={25}
                 className="py-4 z-0"
                 pauseOnHover={true}
               >
                 {/* Duplicate testimonials for smoother looping */}
-                {[...testimonials, ...testimonials].map((testimonial, index) => (
-                  <TestimonialCard
-                    key={`${testimonial.id}-${index}`}
-                    testimonial={testimonial}
-                    isMobile={false}
-                  />
-                ))}
+                {[...testimonials, ...testimonials].map(
+                  (testimonial, index) => (
+                    <TestimonialCard
+                      key={`${testimonial.id}-${index}`}
+                      testimonial={testimonial}
+                      isMobile={false}
+                    />
+                  )
+                )}
               </Marquee>
             </div>
 

@@ -91,7 +91,7 @@ function AboutWithVideoSection() {
           variants={staggerContainer}
         >
           <motion.div variants={fadeDown}>
-            <Header subtitle="Our Design Process" />
+            {/* <Header subtitle="Our Design Process" /> */}
           </motion.div>
           <div className="mt-6 md:mt-9">
             {/* Responsive Flex Container - Modified for better responsiveness */}
@@ -101,22 +101,21 @@ function AboutWithVideoSection() {
                 className="w-full md:w-1/2 max-w-full md:max-w-[500px] lg:max-w-[600px] flex flex-col"
                 variants={fadeIn}
               >
-                <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+                <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-6">
                   <motion.h2
-                    className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 tracking-tight"
+                    className="text-2xl sm:text-2xl md:text-2xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 tracking-tight"
                     variants={fadeDown}
                   >
-                    From Concept to Wearable QR Art
+                    More Than Meets the Eye
                   </motion.h2>
                   <motion.p
-                    className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-base"
+                    className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-4 max-w-lg mx-auto lg:mx-0"
                     variants={fadeUp}
                   >
-                    Our innovative platform makes it simple to design functional
-                    QR codes that seamlessly blend with your personal style.
-                    Create codes that link to your social profiles, favorite
-                    music, portfolio, or any digital content while maintaining
-                    your unique aesthetic.
+                    Every piece has layers. You see a pattern, a shape. Look
+                    closer—it&apos;s a message. Add a QR code, and suddenly,
+                    your art becomes a gateway to your world. A link to your
+                    work, your story, your next big idea.
                   </motion.p>
 
                   <motion.div className="mt-2 sm:mt-4" variants={fadeUp}>
@@ -212,14 +211,14 @@ function AboutWithVideoSection() {
 
         {/* About Us Section */}
         <motion.div
-          className="mt-16 md:mt-20"
+          className="mt-20 md:mt-20"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={staggerContainer}
         >
           <motion.div variants={fadeDown}>
-            <Header subtitle="About QRWear" />
+            {/* <Header subtitle="About QRWear" /> */}
           </motion.div>
 
           <div className="mt-8 md:mt-12">
@@ -232,17 +231,16 @@ function AboutWithVideoSection() {
                 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 tracking-tight mb-4"
                 variants={fadeDown}
               >
-                Our Startup Journey
+                Sustainable by Design
               </motion.h2>
               <motion.p
                 className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg max-w-3xl"
                 variants={fadeUp}
               >
-                Founded in 2023, QRWear began as a small team with a big vision:
-                to bridge the gap between fashion and technology. What started
-                in a garage has now grown into an innovative platform
-                reimagining how we interact with digital content through
-                everyday clothing.
+                We believe in less waste and more meaning. That&apos;s why we
+                offer the option to print your art on eco-friendly, GOTS and
+                GRS-certified clothing. No fast fashion, no throwaway
+                trends—just wearable self-expression with a purpose.
               </motion.p>
             </motion.div>
 
@@ -466,14 +464,17 @@ function AboutWithVideoSection() {
                 className="text-xl sm:text-2xl font-bold text-white mb-4 relative z-10"
                 variants={fadeDown}
               >
-                Ready to Join the QRWear Movement?
+                For the Creators, the Dreamers, the Doers
               </motion.h3>
               <motion.p
                 className="text-white/90 mb-6 max-w-2xl mx-auto relative z-10"
                 variants={fadeUp}
               >
-                Start creating your custom wearable QR designs today and turn
-                your everyday clothing into powerful networking tools.
+                Gen Z is rewriting the rules. Over half of us want to be
+                entrepreneurs, and all of us are juggling a million thoughts at
+                once. Creativity is our outlet. It&apos;ss how we process, how
+                we share, how we breathe. Our designs are made for this
+                mindset—quick to create, easy to share, and deeply personal.
               </motion.p>
               <motion.div
                 className="mt-2 sm:mt-4 relative z-10"

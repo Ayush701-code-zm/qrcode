@@ -6,6 +6,7 @@ import {
   ChevronDown,
   MapPin,
   CreditCard,
+  Tag,
 } from "lucide-react";
 import axios from "axios";
 import { Input } from "../../../components/ui/input";
@@ -39,6 +40,12 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [lastFocusedInput, setLastFocusedInput] = useState(null);
   const inputRefs = useRef({});
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [couponInfo, setCouponInfo] = useState(null);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   // Address form state
   const [addressForm, setAddressForm] = useState({
@@ -110,6 +117,62 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
   // Set up ref for input elements
   const setInputRef = (name, element) => {
     inputRefs.current[name] = element;
+  };
+
+  // Validate coupon code
+  const validateCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError("");
+
+    try {
+      // Calculate the current cart total
+      const cartTotal = subtotal;
+
+      // Get product IDs from cart items (fallback to empty string if product_id is missing)
+      const productIds = cart.map((item) => item.product_id || "");
+
+      const response = await axios.post(
+        `http://localhost:4000/api/validate-coupon/${couponCode}`,
+        {
+          cartTotal: cartTotal,
+          productIds: productIds,
+        }
+      );
+
+      if (response.data.valid) {
+        // Ensure couponInfo has all required fields with fallbacks
+        setCouponInfo({
+          code: response.data.code || couponCode,
+          type: response.data.type || "percentage",
+          value:
+            typeof response.data.value === "number" ? response.data.value : 0,
+          valid: true,
+        });
+        setCouponError("");
+      } else {
+        setCouponInfo(null);
+        setCouponError(response.data.message || "Invalid coupon code");
+      }
+    } catch (error) {
+      setCouponInfo(null);
+      setCouponError(
+        error.response?.data?.message || "Error validating coupon"
+      );
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  // Remove applied coupon
+  const removeCoupon = () => {
+    setCouponCode("");
+    setCouponInfo(null);
+    setCouponError("");
   };
 
   // Fetch shipping rates
@@ -235,6 +298,7 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
             name: selectedRate?.name || "Standard Shipping",
             rate: selectedRate?.rate || shippingCost,
           },
+          coupon: couponInfo, // Pass coupon info to the server
         }
       );
 
@@ -260,7 +324,77 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
         shippingRates.find((rate) => rate.id === selectedShipping)?.rate
       ) || 4.99
     : 4.99;
-  const total = subtotal + shippingCost;
+
+  // Calculate discount amount with null checks
+  const discount = couponInfo
+    ? couponInfo.type === "percentage"
+      ? (subtotal * (couponInfo.value || 0)) / 100
+      : Math.min(couponInfo.value || 0, subtotal) // Fixed amount discount, capped at subtotal
+    : 0;
+
+  const discountedSubtotal = subtotal - discount;
+  const total = discountedSubtotal + shippingCost;
+
+  // Render coupon form
+  const renderCouponForm = () => {
+    return (
+      <div className="mt-6 mb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">
+          Apply Coupon
+        </h3>
+
+        {couponInfo ? (
+          <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg mb-4">
+            <div className="flex items-center">
+              <Tag size={18} className="text-green-500 mr-2" />
+              <div>
+                <p className="font-medium text-green-600 dark:text-green-400">
+                  {couponInfo.code}
+                </p>
+                <p className="text-sm text-green-600 dark:text-green-400">
+                  {couponInfo.type === "percentage"
+                    ? `${couponInfo.value || 0}% off`
+                    : `$${(couponInfo.value || 0).toFixed(2)} off`}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={removeCoupon}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <div className="flex-1">
+              <Input
+                type="text"
+                placeholder="Enter coupon code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="w-full"
+              />
+            </div>
+
+            <button
+              onClick={validateCoupon}
+              disabled={isValidatingCoupon || !couponCode.trim()}
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center"
+            >
+              {isValidatingCoupon ? "Validating..." : "Apply"}
+            </button>
+          </div>
+        )}
+
+        {couponError && (
+          <div className="mt-2 text-sm text-red-600 dark:text-red-400">
+            {couponError}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   // Cart content rendering
   const renderCartContent = () => {
@@ -283,6 +417,8 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
           ))}
         </div>
 
+        {renderCouponForm()}
+
         <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
           <div className="flex justify-between mb-2">
             <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
@@ -290,6 +426,14 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
               ${subtotal.toFixed(2)}
             </span>
           </div>
+
+          {discount > 0 && (
+            <div className="flex justify-between mb-2 text-green-600 dark:text-green-400">
+              <span>Discount</span>
+              <span>-${discount.toFixed(2)}</span>
+            </div>
+          )}
+
           <div className="flex justify-between mb-4">
             <span className="text-gray-600 dark:text-gray-400">Shipping</span>
             <span className="font-medium text-gray-800 dark:text-gray-200">

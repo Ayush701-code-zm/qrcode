@@ -69,9 +69,9 @@ function ContactFormSection() {
         variants={staggerContainer}
       >
         <motion.div className="flex flex-col items-center" variants={fadeDown}>
-          <Header subtitle="We're Here to Help" />
+          {/* <Header subtitle="We're Here to Help" /> */}
         </motion.div>
-        <div className="container mx-auto mt-9">
+        <div className="container mx-auto mt-5">
           <div className="flex flex-col md:flex-row gap-8 md:gap-16">
             {/* Left side - Image */}
             <motion.div className="w-full md:w-1/2" variants={fadeIn}>

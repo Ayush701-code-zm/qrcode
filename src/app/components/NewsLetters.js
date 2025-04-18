@@ -57,15 +57,27 @@ function Newsletter() {
           variants={staggerContainer}
         >
           {/* Centered Header */}
-          <motion.div className="text-center" variants={fadeDown}>
+          {/* <motion.div className="text-center" variants={fadeDown}>
             <Header subtitle="Subscribe to Our Style Newsletter" />
-          </motion.div>
+          </motion.div> */}
+          {/* <motion.h2
+            className="text-center text-2xl sm:text-2xl md:text-2xl lg:text-4xl justify-center items-center font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 tracking-tight"
+            variants={fadeDown}
+          >
+            Subscribe to Our Style Newsletter
+          </motion.h2> */}
+          <motion.h2
+            className="text-2xl sm:text-2xl md:text-2xl lg:text-4xl text-center font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-300 tracking-tight"
+            variants={fadeDown}
+          >
+            Subscribe to Our Style Newsletter
+          </motion.h2>
 
           {/* Main Content */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 lg:gap-16 mt-6 md:mt-12">
             {/* Image - optimized for all screen sizes */}
             <motion.div
-              className="w-full md:w-2/5 flex justify-center mb-6 md:mb-0"
+              className="w-full md:w-2/5 flex justify-center mb-3 md:mb-0"
               variants={fadeIn}
               whileHover={{
                 scale: 1.03,
@@ -87,7 +99,7 @@ function Newsletter() {
               variants={fadeUp}
             >
               <motion.p
-                className="mb-6 text-base md:text-sm lg:text-normal font-semibold text-center md:text-left text-gray-700 dark:text-gray-300"
+                className="text-base md:text-lg lg:text-normal text-gray-700 dark:text-gray-300 mt-4 w-full lg:w-full"
                 variants={fadeUp}
               >
                 Be the first to discover new QR design trends, limited edition
@@ -101,7 +113,7 @@ function Newsletter() {
 
               {/* Responsive Form */}
               <motion.div
-                className="w-full grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4"
+                className="w-full mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4"
                 variants={fadeUp}
               >
                 <motion.div
