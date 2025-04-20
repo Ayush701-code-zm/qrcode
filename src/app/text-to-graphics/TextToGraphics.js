@@ -645,10 +645,8 @@ const addToCart = (cartItem) => {
         {loader && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full text-center">
-              <Loading />
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
-                {loderMsg}
-              </p>
+              <Loading message={loderMsg} />
+         
             </div>
           </div>
         )}

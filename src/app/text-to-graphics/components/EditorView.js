@@ -133,20 +133,7 @@ const EditorView = ({
         </div>
 
         {/* Order Button */}
-        <div className="mt-6">
-          <button
-            onClick={() => setShowProductSelector(true)}
-            disabled={!text.length}
-            className={`w-full flex items-center justify-center py-3 px-4 ${
-              text.length
-                ? "bg-orange-500 hover:bg-orange-600"
-                : "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
-            } text-white font-medium rounded-lg transition-colors duration-200`}
-          >
-            <ShoppingCart size={18} className="mr-2" />
-            Order Products with This Design
-          </button>
-        </div>
+
 
         {printifyStatus && (
           <div className="mt-4 py-2 px-4 bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 rounded-lg text-sm">
