@@ -24,7 +24,7 @@ export default function TextToGraphicsPage() {
            textInput={textInput}
            setTextInput={setTextInput} />
       </div>
-      <FooterSection />
+     
     </main>
   );
 }
