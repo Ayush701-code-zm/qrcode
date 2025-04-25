@@ -207,7 +207,7 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
 
       // Call your API to get shipping rates
       const response = await axios.post(
-        "http://localhost:3001/uploadImage/shipping/rates",
+        "https://art-of-qr-backend.vercel.app/uploadImage/shipping/rates",
         {
           recipient,
           items,
@@ -291,7 +291,7 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
 
       // Call Stripe checkout endpoint
       const response = await axios.post(
-        "http://localhost:3001/stripe/create-checkout-session",
+        "https://art-of-qr-backend.vercel.app/stripe/create-checkout-session",
         {
           customer,
           items: lineItems,

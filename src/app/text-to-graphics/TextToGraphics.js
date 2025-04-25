@@ -126,7 +126,7 @@ const TextToGraphics = ({
 
             try {
               const response = await axios.post(
-                "http://localhost:3001/uploadImage/mockups",
+                "https://art-of-qr-backend.vercel.app/uploadImage/mockups",
               
                 body
               );
@@ -147,7 +147,7 @@ const TextToGraphics = ({
                 await timer(5000);
 
                 const successfulUrls = await axios.get(
-                  `http://localhost:3001/uploadImage/mockup-results?payload=${payload}`
+                  `https://art-of-qr-backend.vercel.app/uploadImage/mockup-results?payload=${payload}`
                 );
                 setLoader(false);
                 if (successfulUrls.status === 200)
