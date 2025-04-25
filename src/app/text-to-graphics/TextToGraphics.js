@@ -38,7 +38,7 @@ const TextToGraphics = ({
   setTextInput,
   navigate,
 }) => {
-  let defaultBoxSize = 50;
+  let defaultBoxSize = 60;
   const [printifyStatus, setPrintifyStatus] = useState(false);
   const [spacingBuffer, setSpacingBuffer] = useState(5);
   const [mockupUrl, setMockupUrl] = useState([]);
@@ -61,39 +61,7 @@ const TextToGraphics = ({
   const [productOptions, setProductOptions] = useState([]);
   const [productLoading, setProductLoading] = useState(true);
 
-  // Add useEffect to fetch products
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setProductLoading(true);
-      try {
-        const response = await axios.get('http://localhost:3001/uploadImage/products');
-        // Transform the API response to match the expected format
-        const formattedProducts = response.data.result.map(product => ({
-          id: product.id,
-          name: product.name,
-          price: 24.99, 
-          image: product.thumbnail_url,
-          external_id: product.external_id,
-          variants: product.variants
-        }));
-        
-        setProductOptions(formattedProducts);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        // Set fallback default products in case of error
-        setProductOptions([
-          { id: 1, name: "T-Shirt", price: 24.99, image: "/api/placeholder/100/100" },
-          { id: 2, name: "Mug", price: 14.99, image: "/api/placeholder/100/100" },
-        ]);
-      } finally {
-        setProductLoading(false);
-      }
-    };
 
-    fetchProducts();
-  }, []);
-
-  // Download function for PNG
   const downloadPng = async () => {
     let graphic = document.getElementById("graphic-parent");
     if (graphic) {
@@ -113,7 +81,7 @@ const TextToGraphics = ({
     }
   };
 
-  // Function to handle SVG download
+
   const downloadSvg = () => {
     let graphic = document.getElementById("graphic-parent");
     if (graphic) {
@@ -268,114 +236,61 @@ const TextToGraphics = ({
     }
   }, [url]);
 
-  // Modify font fetching and application
-  useEffect(() => {
-    const fetchFontVersion = async () => {
-      setFontLoading(true); // Start loading
-      try {
-        const version = Math.floor(Date.now() / 1000);
-        const fontUrlWithVersion = `https://qrcode-mu-orcin.vercel.app/fonts/Megafont.ttf`;
-        
-        // Create a FontFace instance to preload the font
-        const font = new FontFace('Megafont', `url(${fontUrlWithVersion})`);
-        
-        // Wait for font to load
-        await font.load();
-        
-        // Add the loaded font to the document
-        document.fonts.add(font);
-        
-        setFontUrl(fontUrlWithVersion);
-        setFontLoading(false); // End loading
-      } catch (error) {
-        console.log("Error fetching font metadata:", error);
-        setFontLoading(false); // End loading even if there's an error
-      }
-    };
 
-    fetchFontVersion();
-  }, []);
-
-  // Apply font with loading state
-  // useEffect(() => {
-  //   if (!fontUrl) return;
-
-  //   const styleSheet = document.createElement("style");
-  //   styleSheet.textContent = `
-  //     @font-face {
-  //       font-family: 'Megafont';
-  //       src: url('${fontUrl}') format('truetype');
-  //       font-weight: 700;
-  //       font-style: normal;
-  //       font-display: fallback;
-  //     }
-  //   `;
-  //   document.head.appendChild(styleSheet);
-    
-  //   if (qrRef.current) {
-  //     qrRef.current.style.fontFamily = "Megafont";
-  //     qrRef.current.style.fontWeight = "700";
-  //     qrRef.current.style.fontSize = "2.5rem";
-  //     qrRef.current.style.letterSpacing = "0.05em";
-  //   }
-  // }, [fontUrl]);
 
   useEffect(() => {
     if (!textRef.current) return;
-
-    // Get exact dimensions of the text content
+    
     let textWidth = textRef.current.clientWidth;
     let textHeight = textRef.current.clientHeight;
-
-
-    // Calculate appropriate size based on text content
+    
     let newSize;
-
+    
+    // Special case for exactly 3 characters
+    if (text.length === 3) {
+      newSize = 58;
+      setBoxSize(newSize);
+      setQrSize(newSize - (textHeight + spacingBuffer) * 2);
+      return;
+    }
+    
     if (config?.format === "center") {
       // Calculate size for centered format
       const lineCount = (text.match(/\n/g) || []).length + 1;
-
+      
       if (text.length <= 1) {
-        // Special case for single character
         newSize = defaultBoxSize;
       } else if (lineCount === 1) {
         // Single line of text
         newSize = Math.max(defaultBoxSize, textWidth + 20 + spacingBuffer);
       } else {
-        // Multiple lines
         newSize = Math.max(
           defaultBoxSize,
           textWidth + textHeight + 18 + spacingBuffer
         );
       }
-
+      
       // Set both box and QR size
       setBoxSize(newSize);
       setQrSize(newSize - (textHeight + spacingBuffer) * 2);
     } else {
-      // Calculate size for left format
       const lineCount = (text.match(/\n/g) || []).length + 1;
-
+      
       if (text.length <= 1) {
-        // Special case for single character
         newSize = defaultBoxSize;
       } else if (lineCount === 1) {
-        // Single line of text
         newSize = Math.max(defaultBoxSize, textWidth + 15 + spacingBuffer);
       } else {
-        // Multiple lines
         newSize = Math.max(
           defaultBoxSize,
           textWidth + textHeight + spacingBuffer
         );
       }
-
+      
       // Set both box and QR size
       setBoxSize(newSize);
       setQrSize(newSize - (textHeight + spacingBuffer) * 2);
     }
-
-  
   }, [text, spacingBuffer, config?.format, defaultBoxSize]);
 
 // Updated addToCart function
@@ -664,16 +579,7 @@ const customStyles = {
         )}
 
         {/* New font loading overlay */}
-        {fontLoading && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full text-center">
-              <Loading />
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
-                Loading Font...
-              </p>
-            </div>
-          </div>
-        )}
+
 
         {/* Help Info */}
         <div className="mt-8 text-center">
