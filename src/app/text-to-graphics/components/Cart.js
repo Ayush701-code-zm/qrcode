@@ -137,7 +137,7 @@ const Cart = ({ cart, setCart, setActiveTab, orderPlaced, setOrderPlaced }) => {
       const productIds = cart.map((item) => item.product_id || "");
 
       const response = await axios.post(
-        `https://upwrk-qr.onrender.com/api/validate-coupon/${couponCode}`,
+        `https://upwrk-qrankit.onrender.com/api/validate-coupon/${couponCode}`,
         {
           cartTotal: cartTotal,
           productIds: productIds,
