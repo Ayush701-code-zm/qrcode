@@ -59,7 +59,7 @@ const TextToGraphics = ({
   const [showProductSelector, setShowProductSelector] = useState(false);
   const [fontLoading, setFontLoading] = useState(true);
   const [productOptions, setProductOptions] = useState([]);
-  const [productLoading, setProductLoading] = useState(true);
+  const [productLoading, setProductLoading] = useState(false);
 
 
   const downloadPng = async () => {
