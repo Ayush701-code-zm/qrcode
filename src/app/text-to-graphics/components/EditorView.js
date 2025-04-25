@@ -103,7 +103,7 @@ const EditorView = ({
           <button
             onClick={downloadSvg}
             disabled={!text.length}
-            className={`flex items-center justify-center py-2 px-4 ${
+            className={`flex items-center justify-center py-2 px-4 cursor-pointer ${
               text.length
                 ? "bg-purple-500 hover:bg-purple-600"
                 : "bg-gray-300 dark:bg-gray-700 cursor-not-allowed "
@@ -115,7 +115,7 @@ const EditorView = ({
           <button
             onClick={sendToPrintify}
             disabled={!text.length}
-            className={`flex items-center justify-center py-2 px-4 ${
+            className={`flex items-center justify-center py-2 px-4 cursor-pointer ${
               text.length
                 ? "bg-green-500 hover:bg-green-600"
                 : "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"

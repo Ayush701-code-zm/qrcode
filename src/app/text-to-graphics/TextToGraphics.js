@@ -455,7 +455,7 @@ const customStyles = {
         </div>
 
         {/* Cart Indicator */}
-        <div className="fixed top-4 right-4 z-10">
+        <div className="fixed top-4 right-4 z-10 cursor-pointer">
           <button
             onClick={() => setActiveTab("cart")}
             className="flex items-center justify-center px-3 cursor-pointer py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition-colors duration-200"
@@ -471,7 +471,7 @@ const customStyles = {
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-6">
-          <div className="inline-flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="inline-flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer">
             <button
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
                 activeTab === "editor"
@@ -484,7 +484,7 @@ const customStyles = {
               Editor
             </button>
             <button
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
                 activeTab === "results"
                   ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"

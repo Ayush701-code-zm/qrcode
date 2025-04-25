@@ -1,17 +1,102 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import Image from "next/image";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Button from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import Header from "@/components/commons/Header";
 import { motion } from "framer-motion";
-import { Send, MessageSquare } from "lucide-react";
+import { MessageSquare, CheckCircle, AlertCircle, Loader } from "lucide-react";
 
 function ContactFormSection() {
+  // Form state management
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  // Form validation and submission state
+  const [errors, setErrors] = useState({});
+  const [formStatus, setFormStatus] = useState({
+    isSubmitting: false,
+    isSubmitted: false,
+    isSuccess: false,
+    message: "",
+  });
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setFormStatus({
+      isSubmitting: true,
+      isSubmitted: false,
+      isSuccess: false,
+      message: "",
+    });
+    
+    try {
+      const response = await axios.post('/api/contact', formData);
+      
+      setFormStatus({
+        isSubmitting: false,
+        isSubmitted: true,
+        isSuccess: true,
+        message: response.data.message || "Your message has been sent successfully!",
+      });
+      // Reset form
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setFormStatus({
+        isSubmitting: false,
+        isSubmitted: true,
+        isSuccess: false,
+        message: error.response?.data?.error || "Failed to send message. Please try again.",
+      });
+    }
+  };
+
   // Animation variants consistent with previous components
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
@@ -113,7 +198,30 @@ function ContactFormSection() {
                   </motion.p>
                 </motion.div>
 
+                {/* Status message */}
+                {formStatus.isSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`p-4 rounded-md ${
+                      formStatus.isSuccess 
+                        ? "bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800" 
+                        : "bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {formStatus.isSuccess ? (
+                        <CheckCircle size={18} />
+                      ) : (
+                        <AlertCircle size={18} />
+                      )}
+                      <span>{formStatus.message}</span>
+                    </div>
+                  </motion.div>
+                )}
+
                 <motion.form
+                  onSubmit={handleSubmit}
                   className="flex flex-col gap-6"
                   variants={staggerContainer}
                   initial="hidden"
@@ -127,60 +235,94 @@ function ContactFormSection() {
                     <motion.div variants={formFieldVariants}>
                       <Input
                         type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
                         placeholder="Your Name"
-                        className="p-3 rounded-md border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300"
+                        className={`p-3 rounded-md border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300 ${
+                          errors.name ? "border-red-500 dark:border-red-500" : ""
+                        }`}
                       />
+                      {errors.name && (
+                        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                      )}
                     </motion.div>
+                    
                     <motion.div variants={formFieldVariants}>
                       <Input
                         type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
                         placeholder="Email Address"
-                        className="p-3 rounded-md border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300"
+                        className={`p-3 rounded-md border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300 ${
+                          errors.email ? "border-red-500 dark:border-red-500" : ""
+                        }`}
                       />
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                      )}
                     </motion.div>
+                    
                     <motion.div variants={formFieldVariants}>
                       <Input
                         type="text"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
                         placeholder="Subject"
                         className="p-3 rounded-md border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300"
                       />
                     </motion.div>
-                    {/*
-                    Phone Input Field
-                    <PhoneInput
-                      country={"us"}
-                      inputClass="w-full p-3 rounded-md border border-gray-300"
-                    /> */}
 
                     <motion.div variants={formFieldVariants}>
                       <Textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
                         placeholder="Tell us about your QR code design idea or question"
-                        className="p-3 rounded-md min-h-32 border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300"
+                        className={`p-3 rounded-md min-h-32 border-gray-200 dark:border-gray-700 dark:bg-gray-800/80 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20 transition-all duration-300 ${
+                          errors.message ? "border-red-500 dark:border-red-500" : ""
+                        }`}
                       />
+                      {errors.message && (
+                        <p className="text-red-500 text-sm mt-1">{errors.message}</p>
+                      )}
                     </motion.div>
                   </motion.div>
 
                   {/* Submit Button */}
                   <motion.div
                     variants={fadeUp}
-                    whileHover={{
+                    whileHover={!formStatus.isSubmitting ? {
                       scale: 1.03,
                       transition: {
                         type: "spring",
                         stiffness: 400,
                         damping: 20,
                       },
-                    }}
-                    whileTap={{ scale: 0.98 }}
+                    } : {}}
+                    whileTap={!formStatus.isSubmitting ? { scale: 0.98 } : {}}
                   >
                     <Button
+                      type="submit"
+                      disabled={formStatus.isSubmitting}
                       text={
                         <div className="flex items-center justify-center gap-2">
-                          <MessageSquare size={18} />
-                          <span>Send Message</span>
+                          {formStatus.isSubmitting ? (
+                            <>
+                              <Loader size={18} className="animate-spin" />
+                              <span>Sending...</span>
+                            </>
+                          ) : (
+                            <>
+                              <MessageSquare size={18} />
+                              <span>Send Message</span>
+                            </>
+                          )}
                         </div>
                       }
-                      className="w-full h-12 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 dark:hover:from-blue-500 dark:hover:to-purple-400 text-white shadow-lg rounded-md transition-all duration-300"
+                      className="w-full h-12 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 dark:from-blue-600 dark:to-purple-500 dark:hover:from-blue-500 dark:hover:to-purple-400 text-white shadow-lg rounded-md transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
                     />
                   </motion.div>
                 </motion.form>
