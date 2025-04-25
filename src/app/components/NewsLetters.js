@@ -105,7 +105,7 @@ function Newsletter() {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post("/api/subscribe", { email }); // Update endpoint as needed
+      const response = await axios.post("https://art-of-qr-backend.vercel.app/newsletter/create-newsletter", { email }); // Update endpoint as needed
       if (response.status === 200) {
         showToast(
           "Subscribed!", 
