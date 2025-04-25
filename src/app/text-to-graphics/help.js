@@ -1,3 +1,5 @@
+import localFont from "next/font/local";
+
 export const lettersPerRowMapLeft = {
   1: [],
   2: [],
@@ -152,3 +154,9 @@ export const lettersPerRowMapCenter_withQr = {
   35: [4, 10, 17, 26],
   36: [4, 10, 17, 26],
 }
+
+export const Megafont = localFont({
+  src: "./Megafont.ttf",
+  variable: "--font-custom", 
+  display: "swap",
+});

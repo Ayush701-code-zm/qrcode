@@ -38,7 +38,7 @@ const TextToGraphics = ({
   setTextInput,
   navigate,
 }) => {
-  let defaultBoxSize = 35;
+  let defaultBoxSize = 50;
   const [printifyStatus, setPrintifyStatus] = useState(false);
   const [spacingBuffer, setSpacingBuffer] = useState(5);
   const [mockupUrl, setMockupUrl] = useState([]);
@@ -297,28 +297,28 @@ const TextToGraphics = ({
   }, []);
 
   // Apply font with loading state
-  useEffect(() => {
-    if (!fontUrl) return;
+  // useEffect(() => {
+  //   if (!fontUrl) return;
 
-    const styleSheet = document.createElement("style");
-    styleSheet.textContent = `
-      @font-face {
-        font-family: 'Megafont';
-        src: url('${fontUrl}') format('truetype');
-        font-weight: 900;
-        font-style: normal;
-        font-display: fallback;
-      }
-    `;
-    document.head.appendChild(styleSheet);
+  //   const styleSheet = document.createElement("style");
+  //   styleSheet.textContent = `
+  //     @font-face {
+  //       font-family: 'Megafont';
+  //       src: url('${fontUrl}') format('truetype');
+  //       font-weight: 700;
+  //       font-style: normal;
+  //       font-display: fallback;
+  //     }
+  //   `;
+  //   document.head.appendChild(styleSheet);
     
-    if (qrRef.current) {
-      qrRef.current.style.fontFamily = "Megafont";
-      qrRef.current.style.fontWeight = "900";
-      qrRef.current.style.fontSize = "2.5rem";
-      qrRef.current.style.letterSpacing = "0.05em";
-    }
-  }, [fontUrl]);
+  //   if (qrRef.current) {
+  //     qrRef.current.style.fontFamily = "Megafont";
+  //     qrRef.current.style.fontWeight = "700";
+  //     qrRef.current.style.fontSize = "2.5rem";
+  //     qrRef.current.style.letterSpacing = "0.05em";
+  //   }
+  // }, [fontUrl]);
 
   useEffect(() => {
     if (!textRef.current) return;
@@ -422,97 +422,109 @@ const addToCart = (cartItem) => {
     }, 1000);
   };
 
-  const customStyles = {
-    qrBox: {
-      position: "relative",
-      color: "black",
-      backgroundColor: "white",
-      textAlign: "left",
-      transform: "rotate(45deg)",
-      fontFamily: "Megafont",
-      lineHeight: "0.76",
-      fontWeight: "bold",
-    },
-    qrBoxCentered: {
-      position: "relative",
-      backgroundColor: "white",
-      transform: "rotate(45deg)",
-      fontFamily: "Megafont",
-      lineHeight: "0.76",
-    },
-    textTop: {
-      position: "absolute",
-      top: "0px",
-      right: "4px",
-      rotate: "180deg",
-      whiteSpace: "break-spaces",
-      wordWrap: "break-word",
-      maxWidth: "100%",
-      padding: "2px",
-    },
-    textBottom: {
-      position: "absolute",
-      bottom: "0px",
-      left: "3px",
-      whiteSpace: "break-spaces",
-      wordWrap: "break-word",
-      maxWidth: "100%",
-      padding: "2px",
-    },
-    textLeft: {
-      position: "absolute",
-      top: "3px",
-      left: "0px",
-      writingMode: "vertical-rl",
-      wordWrap: "break-word",
-      whiteSpace: "break-spaces",
-      maxHeight: "100%",
-      padding: "2px",
-    },
-    textRight: {
-      position: "absolute",
-      writingMode: "vertical-rl",
-      transform: "rotate(180deg)",
-      textAlign: "left",
-      bottom: "3px",
-      right: "1px",
-      whiteSpace: "break-spaces",
-      wordWrap: "break-word",
-      maxHeight: "100%",
-      padding: "2px",
-    },
-    textCentered: {
-      position: "absolute",
-      inset: "0",
-      display: "flex",
-      justifyContent: "center",
-      color: "black",
-      wordWrap: "break-word",
-      whiteSpace: "break-spaces",
-    },
-    textCenteredP: {
-      margin: "0",
-      marginTop: "auto",
-    },
-    flexGraphics: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "100px",
-      opacity: "1",
-      padding: "55px",
-    },
-    qrImage: {
-      width: "100%",
-      height: "100%",
-    },
-    qrTextCenter: {
-      position: "absolute",
-      margin: "auto",
-      inset: "0",
-      color: "black",
-    },
-  };
+const customStyles = {
+  qrBox: {
+    position: "relative",
+    color: "black",
+    backgroundColor: "white",
+    textAlign: "left",
+    transform: "rotate(45deg)",
+    lineHeight: "0.76",
+    fontWeight: "700",
+  },
+  qrBoxCentered: {
+    width: "330px",
+    height: "330px",
+    position: "relative",
+    backgroundColor: "white",
+    transform: "rotate(45deg)",
+    lineHeight: "0.76",
+  },
+  textTop: {
+    position: "absolute",
+    top: "0px",
+    right: "4px",
+    rotate: "180deg",
+    whiteSpace: "break-spaces",
+    wordWrap: "break-word",
+  },
+  textBottom: {
+    position: "absolute",
+    bottom: "0px",
+    left: "3px",
+    whiteSpace: "break-spaces",
+    wordWrap: "break-word",
+  },
+  textLeft: {
+    position: "absolute",
+    top: "3px",
+    left: "0px",
+    writingMode: "vertical-rl",
+    wordWrap: "break-word",
+    whiteSpace: "break-spaces",
+  },
+  textRight: {
+    position: "absolute",
+    writingMode: "vertical-rl",
+    transform: "rotate(180deg)",
+    textAlign: "left",
+    bottom: "3px",
+    right: "1px",
+    whiteSpace: "break-spaces",
+    wordWrap: "break-word",
+  },
+  textCentered: {
+    position: "absolute",
+    inset: "0",
+    display: "flex",
+    justifyContent: "center",
+    color: "black",
+    wordWrap: "break-word",
+    whiteSpace: "break-spaces",
+  },
+  textCenteredP: {
+    margin: "0",
+    marginTop: "auto",
+  },
+  flexGraphics: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "100px",
+    opacity: "1",
+    padding: "55px",
+  },
+  qrImage: {
+    width: "100%",
+    height: "100%",
+  },
+  qrTextCenter: {
+    position: "absolute",
+    margin: "auto",
+    inset: "0",
+    color: "black",
+  },
+  triangle: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    fontSize: "15px",
+    borderRadius: "10px",
+  },
+  qrTextBottomRightCentered: {
+    color: "black",
+    wordWrap: "break-word",
+    whiteSpace: "break-spaces",
+    position: "absolute",
+    inset: "0",
+    display: "flex",
+    justifyContent: "center",
+  },
+};
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">

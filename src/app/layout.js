@@ -4,11 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 // Load local font but do NOT apply globally
-const myCustomFont = localFont({
-  src: "../../public/fonts/Megafont.ttf",
-  variable: "--font-custom", 
-  display: "swap",
-});
+
 
 // Keep Geist Mono as the global font
 const geistMono = Geist_Mono({

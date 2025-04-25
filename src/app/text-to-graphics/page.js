@@ -1,8 +1,6 @@
 'use client';
-
 import TextToGraphics from "./TextToGraphics";
 import NavBar from "../components/NavBar";
-import FooterSection from "../components/FooterSection";
 import { useState } from 'react'
 
 

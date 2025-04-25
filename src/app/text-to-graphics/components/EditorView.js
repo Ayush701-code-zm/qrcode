@@ -7,6 +7,7 @@ import {
   Wand2,
   ShoppingCart,
 } from "lucide-react";
+import { Megafont } from "../help";
 
 const EditorView = ({
   textInput,
@@ -149,10 +150,10 @@ const EditorView = ({
         </h2>
 
         {text.length > 0 ? (
-          <div style={customStyles.flexGraphics} id="graphic-parent">
+          <div style={customStyles.flexGraphics} className={Megafont.className} id="graphic-parent">
             {config.format === "center" ? (
               <div
-                className="font-custom"
+              className={Megafont.className}
                 ref={qrRef}
                 style={{
                   ...customStyles.qrBoxCentered,
